@@ -7,7 +7,7 @@ import java.util.List;
 public class AuctionDetails {
 	
 	private int auctionId;
-	private String sellerId;
+	private int sellerId;
 	private Item item;
 	private Timestamp remainingTime;
 	private BigDecimal initialPrice;
@@ -22,11 +22,11 @@ public class AuctionDetails {
 		this.auctionId = auctionId;
 	}
 	
-	public String getSellerId() {
+	public int getSellerId() {
 		return sellerId;
 	}
 	
-	public void setSellerId(String sellerId) {
+	public void setSellerId(int sellerId) {
 		this.sellerId = sellerId;
 	}
 	

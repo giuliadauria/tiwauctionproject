@@ -35,6 +35,26 @@ public class UserDAO {
 		}
 	}
 	
+	public User findUserById(int userId) throws SQLException{
+		String query = "SELECT * FROM user WHERE id = ?";
+		try (PreparedStatement pstatement = connection.prepareStatement(query);) {
+			pstatement.setInt(1, userId);
+			try(ResultSet result = pstatement.executeQuery()){
+				if (!result.isBeforeFirst()) { // no results, credential check failed
+					return null;
+				}
+				else {
+					User user = new User();
+					user.setUserId(userId);
+					user.setUsername(result.getString("username"));
+					user.setPassword(result.getString("password"));
+					user.setAddress(result.getString("address"));
+				}
+			}	
+		}
+		return user;
+	}
+	
 	public String findUsernameById(int userId) throws SQLException{
 		String query = "SELECT username FROM user WHERE id = ?";
 		try (PreparedStatement pstatement = connection.prepareStatement(query);) {

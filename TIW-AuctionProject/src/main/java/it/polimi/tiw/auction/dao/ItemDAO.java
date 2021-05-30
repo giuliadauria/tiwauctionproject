@@ -34,12 +34,14 @@ public class ItemDAO {
 	}
 	
 	
-	public void createItem(String name, String description) throws SQLException {
+	public int createItem(String name, String description) throws SQLException {
 		String query = "INSERT into item (name, description) VALUES (?, ?)";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setString(1, name);
 			pstatement.setString(2, description);
 			pstatement.executeUpdate();
+			//not really sure this works
+			return pstatement.getResultSet().getInt("id");
 		}
 	}
 	

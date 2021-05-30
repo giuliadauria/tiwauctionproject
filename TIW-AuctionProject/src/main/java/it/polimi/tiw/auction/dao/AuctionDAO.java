@@ -153,23 +153,31 @@ public class AuctionDAO {
 	
 	public void closeAuction(int idAuction) throws SQLException {
 		AuctionDetails auctionToClose = findAuctionDetailsById(idAuction);
-		
-		
-		String query = "INSERT into closedAuction (id, itemId, sellerId, initialPrice, raise, contractorId, finalPrice) VALUES (?, ?, ?, ?, ?, ?, ?) ";
-		try(PreparedStatement pstatement = connection.prepareStatement(query)){
-			pstatement.setInt(1, auctionToClose.getAuctionId());
-			pstatement.setInt(2, auctionToClose.getItem().getItemId());
-			pstatement.setInt(3, auctionToClose.get);
-			
-			
-			
+		//not so sure this really works		
+		if(((Long)auctionToClose.getRemainingTime().getTime()) < 0) {
+			String query = "INSERT into closedAuction (id, itemId, sellerId, initialPrice, raise, contractorId, finalPrice) VALUES (?, ?, ?, ?, ?, ?, ?) ";
+			try(PreparedStatement pstatement = connection.prepareStatement(query)){
+				pstatement.setInt(1, auctionToClose.getAuctionId());
+				pstatement.setInt(2, auctionToClose.getItem().getItemId());
+				pstatement.setInt(3, auctionToClose.getSellerId());
+				pstatement.setBigDecimal(4, auctionToClose.getInitialPrice());
+				pstatement.setBigDecimal(5, auctionToClose.getRaise());
+				BidDAO bidDAO = new BidDAO(connection);
+				UserDAO userDAO = new UserDAO(connection);
+				pstatement.setInt(6, userDAO.findIdByUsername(bidDAO.findLastBid(idAuction).getUsername()));
+				pstatement.setBigDecimal(7, bidDAO.findLastBid(idAuction).getOffer());
+				String deletingQuery  = "DELETE FROM openAuction WHERE id = ?";
+				try(PreparedStatement pstatementdelete = connection.prepareStatement(deletingQuery)){
+					pstatementdelete.setInt(1, idAuction);
+					pstatementdelete.executeUpdate();
+				}
+			}
+		}	
+		else {
+			//Error message: you cannot close this auction yet
 		}
-		
-		
-		
-		
-		
 	}
+
 }
 
 
