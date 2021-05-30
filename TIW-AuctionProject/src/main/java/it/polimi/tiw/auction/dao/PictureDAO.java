@@ -1,11 +1,11 @@
-package it.polimi.tiw.projects.dao;
+package it.polimi.tiw.auction.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import it.polimi.tiw.projects.beans.Picture;
+import it.polimi.tiw.auction.beans.Picture;
 
 public class PictureDAO {
 
