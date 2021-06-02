@@ -37,6 +37,7 @@ public class UserDAO {
 	
 	public User findUserById(int userId) throws SQLException{
 		String query = "SELECT * FROM user WHERE id = ?";
+		User user = new User();
 		try (PreparedStatement pstatement = connection.prepareStatement(query);) {
 			pstatement.setInt(1, userId);
 			try(ResultSet result = pstatement.executeQuery()){
@@ -44,7 +45,6 @@ public class UserDAO {
 					return null;
 				}
 				else {
-					User user = new User();
 					user.setUserId(userId);
 					user.setUsername(result.getString("username"));
 					user.setPassword(result.getString("password"));
@@ -84,5 +84,5 @@ public class UserDAO {
 				}
 			}	
 		}
-	}	
+	}
 }
