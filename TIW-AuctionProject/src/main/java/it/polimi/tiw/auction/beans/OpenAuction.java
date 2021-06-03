@@ -9,7 +9,8 @@ public class OpenAuction {
 	private String sellerId;
 	private String itemName;
 	private BigDecimal bestOffer;
-	private Timestamp remainingTime;
+	//private Timestamp remainingTime;
+	private long remainingTime;
 	
 	public int getAuctionId() {
 		return auctionId;
@@ -43,11 +44,19 @@ public class OpenAuction {
 		this.bestOffer = bestOffer;
 	}
 	
-	public Timestamp getRemainingTime() {
+	/*public Timestamp getRemainingTime() {
 		return remainingTime;
 	}
 	
 	public void setRemainingTime(Timestamp remainingTime) {
+		this.remainingTime = remainingTime;
+	}*/
+	
+	public long getRemainingTime() {
+	return remainingTime;
+	}
+
+	public void setRemainingTime(long remainingTime) {
 		this.remainingTime = remainingTime;
 	}
 }

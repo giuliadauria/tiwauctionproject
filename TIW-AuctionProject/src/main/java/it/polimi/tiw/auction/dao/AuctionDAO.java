@@ -46,6 +46,29 @@ public class AuctionDAO {
 		return auction;
 	}
 	
+	public List<OpenAuction> findOpenAuction() throws SQLException{
+		List<OpenAuction> openAuctionList = new ArrayList<>();
+		String query = "SELECT * FROM auction WHERE deadline > ? ORDER BY deadline asc";
+		try(PreparedStatement pstatement = connection.prepareStatement(query)){
+			Timestamp now = Timestamp.from(Instant.now());
+			pstatement.setTimestamp(1, now);
+			try(ResultSet result = pstatement.executeQuery()){
+				if(result.next()) {
+					OpenAuction openAuction = new OpenAuction();
+					openAuction.setAuctionId(result.getInt("id"));
+					//BidDAO bidDAO = new BidDAO(connection);
+					//openAuction.setBestOffer(bidDAO.findLastBid(result.getInt("id")).getOffer());
+					openAuction.setBestOffer(new BigDecimal("100.50"));
+					openAuction.setItemName(result.getString("name"));
+					//Timestamp remainingTime = new Timestamp(((result.getTimestamp("deadline").getTime()) - now.getTime()));
+					openAuction.setRemainingTime(result.getTimestamp("deadline").getTime()-now.getTime());
+					openAuctionList.add(openAuction);
+				}
+			}
+		}
+		return openAuctionList;
+	}
+	
 	public List<OpenAuction> findOpenAuctionBySeller(int sellerId) throws SQLException{
 		List<OpenAuction> openAuctionList = new ArrayList<>();
 		String query = "SELECT * FROM auction WHERE sellerId = ? AND deadline > ? GROUP BY sellerId ORDER BY deadline asc";
@@ -61,7 +84,7 @@ public class AuctionDAO {
 					openAuction.setBestOffer(bidDAO.findLastBid(result.getInt("id")).getOffer());
 					openAuction.setItemName(result.getString("name"));
 					Timestamp remainingTime = new Timestamp(((result.getTimestamp("deadline").getTime()) - now.getTime()));
-					openAuction.setRemainingTime(remainingTime);
+					//openAuction.setRemainingTime(remainingTime);
 					openAuctionList.add(openAuction);
 				}
 			}
@@ -108,7 +131,7 @@ public class AuctionDAO {
 					BidDAO bidDAO = new BidDAO(connection);
 					auctionFound.setBestOffer(bidDAO.findLastBid(result.getInt("id")).getOffer());
 					Timestamp remainingTime = new Timestamp(((result.getTimestamp("deadline").getTime()) - now.getTime()));					
-					auctionFound.setRemainingTime(remainingTime);
+					//auctionFound.setRemainingTime(remainingTime);
 					foundAuctionList.add(auctionFound);
 				}
 			}

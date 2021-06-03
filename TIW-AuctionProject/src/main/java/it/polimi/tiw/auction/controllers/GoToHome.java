@@ -27,7 +27,6 @@ public class GoToHome extends HttpServlet {
      */
     public GoToHome() {
         super();
-        // TODO Auto-generated constructor stub
     }
     
     public void init() throws ServletException {

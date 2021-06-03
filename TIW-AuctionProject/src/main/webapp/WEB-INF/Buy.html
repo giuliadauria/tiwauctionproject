@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Buy</title>
+</head>
+<body>
+	<h1>Buy Auction Page</h1>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>AuctionID</th>
+				<th>SellerID</th>
+				<th>ItemName</th>
+				<th>BestOffer</th>
+				<th>RemainingTime</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="a : ${openAuctions}">
+				<td th:text="${a.auctionId}"></td>
+				<td th:text="${a.sellerId}"></td>
+				<td th:text="${a.itemName}"></td>
+				<td th:text="${a.bestOffer}"></td>
+				<td th:text="${a.remainingTime}"></td>
+				<td><a href="/ToHome">Details</a></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>
