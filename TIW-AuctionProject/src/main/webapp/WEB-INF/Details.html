@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="ISO-8859-1">
+		<title th:text="${auctionDetails.item.name}">Insert title here</title>
+		<link rel="icon" href="https://image.flaticon.com/icons/png/512/783/783247.png">
+	</head>
+	<body>
+		<h1 th:text="${'auction for ' + auctionDetails.item.name}"></h1>
+		<table border="1">
+			<tbody>
+				<tr th:each="image : ${auctionDetails.item.pictures}">
+					<td> <img th:src="@{/images/${image}}"> </td>
+				</tr>
+			</tbody>
+		</table>
+	</body>
+</html>

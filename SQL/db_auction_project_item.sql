@@ -16,32 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `auction`
+-- Table structure for table `item`
 --
 
-DROP TABLE IF EXISTS `auction`;
+DROP TABLE IF EXISTS `item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `auction` (
+CREATE TABLE `item` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
-  `sellerId` int NOT NULL,
-  `itemId` int NOT NULL,
-  `deadline` timestamp(6) NOT NULL,
-  `initialPrice` decimal(20,0) NOT NULL,
-  `raise` decimal(20,0) NOT NULL,
+  `description` varchar(128) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `auction`
+-- Dumping data for table `item`
 --
 
-LOCK TABLES `auction` WRITE;
-/*!40000 ALTER TABLE `auction` DISABLE KEYS */;
-INSERT INTO `auction` VALUES (1,'vaso2',1,1,'2021-12-11 23:00:00.000000',50,15),(2,'vaso1',1,2,'2021-12-21 23:00:00.000000',100,1),(3,'prova',1,6,'2021-07-10 22:00:00.000000',150,10);
-/*!40000 ALTER TABLE `auction` ENABLE KEYS */;
+LOCK TABLES `item` WRITE;
+/*!40000 ALTER TABLE `item` DISABLE KEYS */;
+INSERT INTO `item` VALUES (1,'vaso1','bel vaso 1'),(2,'vaso2','bel vaso 2'),(6,'vaso6','bel vaso 6');
+/*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

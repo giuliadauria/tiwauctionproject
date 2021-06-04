@@ -3,28 +3,26 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Buy</title>
+<link rel="icon" href="https://image.flaticon.com/icons/png/512/783/783247.png">
 </head>
 <body>
 	<h1>Buy Auction Page</h1>
 	<table border="1">
 		<thead>
 			<tr>
-				<th>AuctionID</th>
-				<th>SellerID</th>
+				<th>Seller</th>
 				<th>ItemName</th>
 				<th>BestOffer</th>
 				<th>RemainingTime</th>
-				<th>Time</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="a : ${openAuctions}">
-				<td th:text="${a.auctionId}"></td>
-				<td th:text="${a.sellerId}"></td>
+				<td th:text="${a.seller}"></td>
 				<td th:text="${a.itemName}"></td>
 				<td th:text="${a.bestOffer}"></td>
 				<td th:text="${a.remainingTime}"></td>
-				<td><a href="/ToHome">Details</a></td>
+				<td><a th:href="@{/GetAuctionDetails(auctionid=${a.auctionId})}">Details</a></td>
 			</tr>
 		</tbody>
 	</table>

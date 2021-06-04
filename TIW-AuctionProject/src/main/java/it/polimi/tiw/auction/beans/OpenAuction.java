@@ -1,16 +1,14 @@
 package it.polimi.tiw.auction.beans;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.concurrent.TimeUnit;
 
 public class OpenAuction {
 
 	private int auctionId;
-	private String sellerId;
+	private String seller;
 	private String itemName;
 	private BigDecimal bestOffer;
-	//private Timestamp remainingTime;
 	private String remainingTime;
 	
 	public int getAuctionId() {
@@ -21,12 +19,12 @@ public class OpenAuction {
 		this.auctionId = auctionId;
 	}
 	
-	public String getSellerId() {
-		return sellerId;
+	public String getSeller() {
+		return seller;
 	}
 	
-	public void setSellerId(String sellerId) {
-		this.sellerId = sellerId;
+	public void setSeller(String seller) {
+		this.seller = seller;
 	}
 	
 	public String getItemName() {
@@ -44,14 +42,6 @@ public class OpenAuction {
 	public void setBestOffer(BigDecimal bestOffer) {
 		this.bestOffer = bestOffer;
 	}
-	
-	/*public Timestamp getRemainingTime() {
-		return remainingTime;
-	}
-	
-	public void setRemainingTime(Timestamp remainingTime) {
-		this.remainingTime = remainingTime;
-	}*/
 	
 	public String getRemainingTime() {
 		return remainingTime;

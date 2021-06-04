@@ -22,7 +22,7 @@ public class ItemDAO {
 				try(ResultSet result = pstatement.executeQuery()){
 					if(result.next()) {
 						item = new Item();
-						item.setItemId(result.getInt("id"));
+						item.setItemId(itemId);
 						item.setName(result.getString("name"));
 						item.setDescription(result.getString("description"));
 						PictureDAO imageDao = new PictureDAO(connection);

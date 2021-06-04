@@ -45,6 +45,7 @@ public class UserDAO {
 					return null;
 				}
 				else {
+					result.next();
 					user.setUserId(userId);
 					user.setUsername(result.getString("username"));
 					user.setPassword(result.getString("password"));
@@ -64,6 +65,7 @@ public class UserDAO {
 					return null;
 				}
 				else {
+					result.next();
 					return result.getString("username");
 				}
 			}	
@@ -80,6 +82,7 @@ public class UserDAO {
 					return -1;
 				}
 				else {
+					result.next();
 					return result.getInt("id");
 				}
 			}	

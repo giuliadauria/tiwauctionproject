@@ -32,14 +32,15 @@ public class AuctionDAO {
 			try(ResultSet result = pstatement.executeQuery()){
 				if(result.next()) {
 					auction = new AuctionDetails();
-					auction.setAuctionId(result.getInt("auctionId"));
+					auction.setAuctionId(result.getInt("id"));
+					UserDAO userDAO = new UserDAO(connection);
+					auction.setSeller(userDAO.findUsernameById(result.getInt("sellerId")));
 					ItemDAO itemDAO = new ItemDAO(connection);
 					auction.setItem(itemDAO.findItemById(result.getInt("itemId")));
-					auction.setRemainingTime(null);
 					auction.setInitialPrice(result.getBigDecimal("initialPrice"));
 					auction.setRaise(result.getBigDecimal("raise"));
-					Timestamp remainingTime = new Timestamp(((result.getTimestamp("deadline").getTime()) - (Timestamp.from(Instant.now()).getTime())));
-					auction.setRemainingTime(remainingTime);
+					Timestamp now = Timestamp.from(Instant.now());
+					auction.setRemainingTime(result.getTimestamp("deadline").getTime()-now.getTime());
 				}
 			}
 		}
@@ -56,10 +57,14 @@ public class AuctionDAO {
 				while(result.next()) {
 					OpenAuction openAuction = new OpenAuction();
 					openAuction.setAuctionId(result.getInt("id"));
+					UserDAO userDAO = new UserDAO(connection);
+					openAuction.setSeller(userDAO.findUsernameById(result.getInt("sellerId")));
 					//BidDAO bidDAO = new BidDAO(connection);
 					//openAuction.setBestOffer(bidDAO.findLastBid(result.getInt("id")).getOffer());
 					openAuction.setBestOffer(new BigDecimal("100.50"));
-					openAuction.setItemName(result.getString("name"));
+					ItemDAO itemDAO = new ItemDAO(connection);
+					openAuction.setItemName((itemDAO.findItemById(result.getInt("itemId")).getName()));
+					//openAuction.setItemName(result.getString("name"));
 					openAuction.setRemainingTime(result.getTimestamp("deadline").getTime()-now.getTime());
 					openAuctionList.add(openAuction);
 				}
@@ -175,7 +180,7 @@ public class AuctionDAO {
 	public void closeAuction(int idAuction) throws SQLException {
 		AuctionDetails auctionToClose = findAuctionDetailsById(idAuction);
 		//not so sure this really works		
-		if(((Long)auctionToClose.getRemainingTime().getTime()) < 0) {
+		/*if(((Long)auctionToClose.getRemainingTime().getTime()) < 0) {
 			String query = "INSERT into closedAuction (id, itemId, sellerId, initialPrice, raise, contractorId, finalPrice) VALUES (?, ?, ?, ?, ?, ?, ?) ";
 			try(PreparedStatement pstatement = connection.prepareStatement(query)){
 				pstatement.setInt(1, auctionToClose.getAuctionId());
@@ -196,7 +201,7 @@ public class AuctionDAO {
 		}	
 		else {
 			//Error message: you cannot close this auction yet
-		}
+		}*/
 	}
 
 }

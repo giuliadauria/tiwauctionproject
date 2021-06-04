@@ -17,12 +17,13 @@ public class PictureDAO {
 	
 	public List<Picture> findPicturesByItemId(int itemId){
 		List<Picture> picturesList = new ArrayList<>();
-		String query = "SELECT id FROM image GROUP BY ?";
+		String query = "SELECT * FROM image WHERE itemId = ?";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setInt(1, itemId);
 			try(ResultSet result = pstatement.executeQuery()){
 				while(result.next()) {
 					Picture picture = new Picture();
+					picture.setImageId(result.getInt("id"));
 					picture.setItemId(result.getInt("itemId"));
 					picture.setPictureUrl(result.getString("url"));
 					picturesList.add(picture);
@@ -36,6 +37,7 @@ public class PictureDAO {
 			return null;
 		}
 		else {
+			System.out.println(picturesList.size());
 			return picturesList;
 		}
 	}

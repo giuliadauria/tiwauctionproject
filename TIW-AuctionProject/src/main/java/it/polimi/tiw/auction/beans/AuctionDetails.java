@@ -3,13 +3,14 @@ package it.polimi.tiw.auction.beans;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AuctionDetails {
 	
 	private int auctionId;
-	private int sellerId;
+	private String seller;
 	private Item item;
-	private Timestamp remainingTime;
+	private String remainingTime;
 	private BigDecimal initialPrice;
 	private BigDecimal raise;
 	private List<Bid> bidList;
@@ -22,12 +23,12 @@ public class AuctionDetails {
 		this.auctionId = auctionId;
 	}
 	
-	public int getSellerId() {
-		return sellerId;
+	public String getSeller() {
+		return seller;
 	}
 	
-	public void setSellerId(int sellerId) {
-		this.sellerId = sellerId;
+	public void setSeller(String seller) {
+		this.seller = seller;
 	}
 	
 	public Item getItem() {
@@ -38,12 +39,16 @@ public class AuctionDetails {
 		this.item = item;
 	}
 	
-	public Timestamp getRemainingTime() {
+	public String getRemainingTime() {
 		return remainingTime;
 	}
 
-	public void setRemainingTime(Timestamp remainingTime) {
-		this.remainingTime = remainingTime;
+	public void setRemainingTime(long remainingTime) {
+		long days = TimeUnit.MILLISECONDS.toDays(remainingTime);
+		long hours = TimeUnit.MILLISECONDS.toHours(remainingTime)-days*24;
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(remainingTime)-days*24*60-hours*60;
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(remainingTime)-days*24*60*60-hours*60*60-minutes*60;
+		this.remainingTime = (days+"d "+hours+"h "+minutes+"m "+seconds+"s");
 	}
 
 	public BigDecimal getInitialPrice() {
