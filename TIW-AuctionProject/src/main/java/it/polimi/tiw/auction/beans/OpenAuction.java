@@ -2,6 +2,7 @@ package it.polimi.tiw.auction.beans;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.concurrent.TimeUnit;
 
 public class OpenAuction {
 
@@ -10,7 +11,7 @@ public class OpenAuction {
 	private String itemName;
 	private BigDecimal bestOffer;
 	//private Timestamp remainingTime;
-	private long remainingTime;
+	private String remainingTime;
 	
 	public int getAuctionId() {
 		return auctionId;
@@ -52,11 +53,15 @@ public class OpenAuction {
 		this.remainingTime = remainingTime;
 	}*/
 	
-	public long getRemainingTime() {
-	return remainingTime;
+	public String getRemainingTime() {
+		return remainingTime;
 	}
 
 	public void setRemainingTime(long remainingTime) {
-		this.remainingTime = remainingTime;
+		long days = TimeUnit.MILLISECONDS.toDays(remainingTime);
+		long hours = TimeUnit.MILLISECONDS.toHours(remainingTime)-days*24;
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(remainingTime)-days*24*60-hours*60;
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(remainingTime)-days*24*60*60-hours*60*60-minutes*60;
+		this.remainingTime = (days+"d "+hours+"h "+minutes+"m "+seconds+"s");
 	}
 }
