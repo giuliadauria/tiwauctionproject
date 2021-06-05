@@ -37,7 +37,6 @@ public class PictureDAO {
 			return null;
 		}
 		else {
-			System.out.println(picturesList.size());
 			return picturesList;
 		}
 	}

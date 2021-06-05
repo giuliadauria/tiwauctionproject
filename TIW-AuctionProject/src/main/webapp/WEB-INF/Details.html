@@ -7,12 +7,15 @@
 	</head>
 	<body>
 		<h1 th:text="${'auction for ' + auctionDetails.item.name}"></h1>
-		<table border="1">
+		<table>
 			<tbody>
-				<tr th:each="image : ${auctionDetails.item.pictures}">
-					<td> <img th:src="@{/images/${image}}"> </td>
+				<tr>
+					<td th:each="image : ${auctionDetails.item.pictures}"> 
+						<img th:src="@{'/images/' + ${image.pictureUrl}}" th:width="256" th:height="192"> 
+					</td>
 				</tr>
 			</tbody>
 		</table>
+		<p th:text="${auctionDetails.item.description}"> </p>
 	</body>
 </html>
