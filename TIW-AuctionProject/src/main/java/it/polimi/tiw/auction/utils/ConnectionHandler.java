@@ -22,7 +22,8 @@ public class ConnectionHandler {
 		} catch (ClassNotFoundException e) {
 			throw new UnavailableException("Can't load database driver");
 		} catch (SQLException e) {
-			throw new UnavailableException("Couldn't get db connection");
+			e.printStackTrace();
+			//throw new UnavailableException("Couldn't get db connection");
 		}
 		return connection;
 	}

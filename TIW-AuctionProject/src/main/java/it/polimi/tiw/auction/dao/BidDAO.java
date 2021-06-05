@@ -38,8 +38,8 @@ public class BidDAO {
 	}
 	
 	public Bid findLastBid(int auctionId) throws SQLException {
-		Bid bid = null;
-		String query = "SELECT TOP FROM bid JOIN user ON userId = id WHERE auctionId = ? ORDER BY dateTime desc";
+		Bid bid = new Bid();
+		String query = "SELECT * FROM bid JOIN user ON bid.userId = user.id WHERE auctionId = ? ORDER BY dateTime desc LIMIT 1";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setInt(1, auctionId);
 			try(ResultSet result = pstatement.executeQuery()){

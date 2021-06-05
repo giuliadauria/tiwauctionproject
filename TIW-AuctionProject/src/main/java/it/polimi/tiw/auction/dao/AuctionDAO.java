@@ -26,7 +26,6 @@ public class AuctionDAO {
 	public AuctionDetails findAuctionDetailsById(int auctionId) throws SQLException {
 		AuctionDetails auction = null;
 		String query = "SELECT * FROM auction WHERE id = ?";
-		//is it necessary the ";" ?
 		try(PreparedStatement pstatement = connection.prepareStatement(query);){
 			pstatement.setInt(1, auctionId);
 			try(ResultSet result = pstatement.executeQuery()){
@@ -50,7 +49,7 @@ public class AuctionDAO {
 	public List<OpenAuction> findOpenAuction() throws SQLException{
 		List<OpenAuction> openAuctionList = new ArrayList<>();
 		String query = "SELECT * FROM auction WHERE deadline > ? ORDER BY deadline asc";
-		try(PreparedStatement pstatement = connection.prepareStatement(query)){
+		try(PreparedStatement pstatement = connection.prepareStatement(query);){
 			Timestamp now = Timestamp.from(Instant.now());
 			pstatement.setTimestamp(1, now);
 			try(ResultSet result = pstatement.executeQuery()){
@@ -74,14 +73,14 @@ public class AuctionDAO {
 	}
 	
 	public List<OpenAuction> findOpenAuctionBySeller(int sellerId) throws SQLException{
-		List<OpenAuction> openAuctionList = new ArrayList<>();
-		String query = "SELECT * FROM auction WHERE sellerId = ? AND deadline > ? GROUP BY sellerId ORDER BY deadline asc";
+		List<OpenAuction> openAuctionList = new ArrayList<OpenAuction>();
+		String query = "SELECT * FROM auction WHERE sellerId = ? AND deadline > ? ORDER BY deadline asc";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			Timestamp now = Timestamp.from(Instant.now());
 			pstatement.setInt(1, sellerId);
 			pstatement.setTimestamp(2, now);
-			try(ResultSet result = pstatement.executeQuery()){
-				if(result.next()) {
+			try(ResultSet result = pstatement.executeQuery();){
+				while(result.next()) {
 					OpenAuction openAuction = new OpenAuction();
 					openAuction.setAuctionId(result.getInt("id"));
 					BidDAO bidDAO = new BidDAO(connection);
@@ -90,6 +89,8 @@ public class AuctionDAO {
 					openAuction.setRemainingTime(result.getTimestamp("deadline").getTime() - now.getTime());
 					openAuctionList.add(openAuction);
 				}
+			}catch(SQLException e) {
+				e.printStackTrace();
 			}
 		}
 		return openAuctionList;
@@ -97,12 +98,11 @@ public class AuctionDAO {
 	
 	public List<ClosedAuction> findClosedAuctionBySeller(int sellerId) throws SQLException{
 		List<ClosedAuction> closedAuctionList = new ArrayList<>();
-		//without orderBy
 		String query = "SELECT FROM (closedAuction JOIN item ON itemId = id) JOIN bid ON (contractorId, id, finalPrice) = (userId, AuctionId, offer) GROUP BY sellerId = ? ";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setInt(1, sellerId);
 			try(ResultSet result = pstatement.executeQuery()){
-				if(result.next()) {
+				while(result.next()) {
 					ClosedAuction closedAuction = new ClosedAuction();
 					closedAuction.setAuctionId(result.getInt("id"));
 					UserDAO userDAO = new UserDAO(connection);
@@ -120,7 +120,7 @@ public class AuctionDAO {
 				
 	public List<OpenAuction> findAuctionByKeyword(String keyword) throws SQLException{
 		List<OpenAuction> foundAuctionList = new ArrayList<>();
-		String query = "SELECT * FROM auction JOIN item ON itemId = id WHERE (name LIKE '%?') OR (description LIKE '%?%') ORDER BY deadline asc";
+		String query = "SELECT * FROM auction JOIN item ON itemId = id WHERE (name LIKE '%?%') OR (description LIKE '%?%') ORDER BY deadline asc";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setString(1, keyword);
 			pstatement.setString(2, keyword);
@@ -148,14 +148,16 @@ public class AuctionDAO {
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setInt(1, idContractor);
 			try(ResultSet result = pstatement.executeQuery()){
-				WonAuction wonAuction = new WonAuction();
-				wonAuction.setAuctionId(result.getInt("id"));
-				ItemDAO itemDAO = new ItemDAO(connection);
-				wonAuction.setItem(itemDAO.findItemById(result.getInt("itemId")));
-				wonAuction.setFinalPrice(result.getBigDecimal("finalPrice"));
-				UserDAO userDAO = new UserDAO(connection);
-				wonAuction.setSellerUsername(userDAO.findUsernameById(result.getInt("sellerId")));
-				wonAuctionList.add(wonAuction);
+				while(result.next()) {
+					WonAuction wonAuction = new WonAuction();
+					wonAuction.setAuctionId(result.getInt("id"));
+					ItemDAO itemDAO = new ItemDAO(connection);
+					wonAuction.setItem(itemDAO.findItemById(result.getInt("itemId")));
+					wonAuction.setFinalPrice(result.getBigDecimal("finalPrice"));
+					UserDAO userDAO = new UserDAO(connection);
+					wonAuction.setSellerUsername(userDAO.findUsernameById(result.getInt("sellerId")));
+					wonAuctionList.add(wonAuction);
+				}
 			}
 		}
 		return wonAuctionList;

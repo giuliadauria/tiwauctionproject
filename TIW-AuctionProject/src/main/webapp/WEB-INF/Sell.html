@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.tyhymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Sell</title>
+</head>
+<body>
+	<h1> Sell Auction Page</h1>
+	<h2>Open Auctions</h2>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>AuctionId</th>
+				<th>ItemName</th>
+				<th>BestOffer</th>
+				<th>RemainingTime</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each= "a: ${openAuctions}">
+				<td th:text="${a.auctionId}"></td>
+				<td th:text="${a.itemName}"></td>
+				<td th:text="${a.bestOffer}"></td>
+				<td th:text="${a.remainingTime}"></td>
+				<td><a th:href="@{/GetAuctionDetails(auctionid=${a.auctionId})}">Details</a></td>
+		</tbody>
+	</table>
+	<h2>Closed Auctions</h2>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>AuctionId</th>
+				<th>ItemName</th>
+				<th>Contractor</th>
+				<th>FinalPrice</th>
+				<th>ContractorAddress</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each= "b: ${closedAuctions}">
+				<td th:text="${b.auctionId}"></td>
+				<td th:text="${b.itemName}"></td>
+				<td th:text="${b.contractorUsername}"></td>
+				<td th:text="${b.finalPrice}"></td>
+				<td th:text="${b.contractorAddress}"></td>
+				<td><a th:href="@{/GetAuctionDetails(auctionid=${b.auctionId})}">Details</a></td>
+		</tbody>
+	</table>
+</body>
+</html>
