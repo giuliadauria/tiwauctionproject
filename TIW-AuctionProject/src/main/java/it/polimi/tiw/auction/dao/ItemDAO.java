@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import it.polimi.tiw.auction.beans.Item;
 
@@ -36,12 +37,20 @@ public class ItemDAO {
 	
 	public int createItem(String name, String description) throws SQLException {
 		String query = "INSERT into item (name, description) VALUES (?, ?)";
-		try(PreparedStatement pstatement = connection.prepareStatement(query)){
+		try(PreparedStatement pstatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);){
 			pstatement.setString(1, name);
 			pstatement.setString(2, description);
 			pstatement.executeUpdate();
-			//not really sure this works
-			return pstatement.getResultSet().getInt("id");
+			//not really sure this works	
+			ResultSet res = pstatement.getGeneratedKeys();
+			int id = 0;
+			if(res.next()) {
+				id = (int)res.getInt(1);
+			}
+			return id;
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return 1;
 		}
 	}
 	

@@ -163,19 +163,23 @@ public class AuctionDAO {
 		return wonAuctionList;
 	}
 	
-	public void createAuction(String nameItem, String description, Timestamp deadline, BigDecimal initialPrice, BigDecimal raise) throws SQLException {
+	public void createAuction(int sellerId, String nameItem, String description, Timestamp deadline, BigDecimal initialPrice, BigDecimal raise) throws SQLException {
 		//prevedo che dopo aver creato l'item e l'asta, se si vuole si possono aggiungere delle foto
 		ItemDAO itemDAO = new ItemDAO(connection);
-		int itemId = itemDAO.createItem(nameItem, description);		
-		String query = "INSERT into auction (itemId, deadline, initialPrice, raise) VALUES (?, ?, ?, ?)";
+		int itemId = itemDAO.createItem(nameItem, description);	
+		String query = "INSERT into auction (itemId, name, deadline, initialPrice, raise, sellerId) VALUES (?, ?, ?, ?, ?, ?)";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setInt(1, itemId);
-			pstatement.setTimestamp(2, deadline);
-			pstatement.setBigDecimal(2, initialPrice);
-			pstatement.setBigDecimal(4, raise);
+			pstatement.setString(2, nameItem);
+			pstatement.setTimestamp(3, deadline);
+			pstatement.setBigDecimal(4, initialPrice);
+			pstatement.setBigDecimal(5, raise);
+			pstatement.setInt(6, sellerId);
 			pstatement.executeUpdate();
-			//if in some way i need to return the auctionId
-			// return pstatement.getResultSet().getInt("id");
+			//if in some way i need to return the auctionId check on createItem method how to do it
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return;
 		}
 	}	
 	

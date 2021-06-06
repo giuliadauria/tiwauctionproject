@@ -46,5 +46,30 @@
 				<td><a th:href="@{/GetAuctionDetails(auctionid=${b.auctionId})}">Details</a></td>
 		</tbody>
 	</table>
+	<div>
+		<p>Complete the form to create an auction</p>
+		<form action="#" th:action="@{/CreateAuction}" method="POST">
+			<fieldset>
+				<p>
+					Item Name: <input type="text" name="itemName" required />
+				</p>
+				<p>
+					Description: <input type="text" name="description" required />
+				</p>
+				<p>
+					Deadline: <input type="datetime" name="deadline"
+						th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd hh:mm:ss')}" 
+						placeholder="yyyy-mm-dd hh:mm:ss" required />
+				</p>
+				<p>
+					Initial Price: <input type="text" name="initialPrice" min=0 required />
+				</p>
+				<p> 
+					Raise: <input type="text" name="raise" min=0 required />
+				</p>	
+				<input type="submit" name="Create Auction">
+			</fieldset>
+		</form>
+	</div>
 </body>
 </html>
