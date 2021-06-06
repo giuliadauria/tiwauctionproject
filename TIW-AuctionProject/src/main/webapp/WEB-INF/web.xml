@@ -15,7 +15,7 @@
   </context-param>
   <context-param>
     <param-name>dbPassword</param-name>
-    <param-value>micio</param-value>
+    <param-value>091099</param-value>
   </context-param>
   <context-param>
     <param-name>dbDriver</param-name>

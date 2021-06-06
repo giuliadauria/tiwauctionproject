@@ -8,7 +8,7 @@ public class OpenAuction {
 	private int auctionId;
 	private String seller;
 	private String itemName;
-	private BigDecimal bestOffer;
+	private float bestOffer;
 	private String remainingTime;
 	
 	public int getAuctionId() {
@@ -35,11 +35,11 @@ public class OpenAuction {
 		this.itemName = itemName;
 	}
 	
-	public BigDecimal getBestOffer() {
+	public float getBestOffer() {
 		return bestOffer;
 	}
 	
-	public void setBestOffer(BigDecimal bestOffer) {
+	public void setBestOffer(float bestOffer) {
 		this.bestOffer = bestOffer;
 	}
 	

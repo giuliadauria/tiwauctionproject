@@ -34,10 +34,12 @@ public class AuctionDAO {
 					auction.setAuctionId(result.getInt("id"));
 					UserDAO userDAO = new UserDAO(connection);
 					auction.setSeller(userDAO.findUsernameById(result.getInt("sellerId")));
+					BidDAO bidDAO = new BidDAO(connection);
+					auction.setBidList(bidDAO.findBidByAuctionId(result.getInt("id")));
 					ItemDAO itemDAO = new ItemDAO(connection);
 					auction.setItem(itemDAO.findItemById(result.getInt("itemId")));
-					auction.setInitialPrice(result.getBigDecimal("initialPrice"));
-					auction.setRaise(result.getBigDecimal("raise"));
+					auction.setInitialPrice(result.getFloat("initialPrice"));
+					auction.setRaise(result.getFloat("raise"));
 					Timestamp now = Timestamp.from(Instant.now());
 					auction.setRemainingTime(result.getTimestamp("deadline").getTime()-now.getTime());
 				}
@@ -58,9 +60,8 @@ public class AuctionDAO {
 					openAuction.setAuctionId(result.getInt("id"));
 					UserDAO userDAO = new UserDAO(connection);
 					openAuction.setSeller(userDAO.findUsernameById(result.getInt("sellerId")));
-					//BidDAO bidDAO = new BidDAO(connection);
-					//openAuction.setBestOffer(bidDAO.findLastBid(result.getInt("id")).getOffer());
-					openAuction.setBestOffer(new BigDecimal("100.50"));
+					BidDAO bidDAO = new BidDAO(connection);
+					openAuction.setBestOffer(bidDAO.findLastBid(result.getInt("id")).getOffer());
 					ItemDAO itemDAO = new ItemDAO(connection);
 					openAuction.setItemName((itemDAO.findItemById(result.getInt("itemId")).getName()));
 					//openAuction.setItemName(result.getString("name"));
