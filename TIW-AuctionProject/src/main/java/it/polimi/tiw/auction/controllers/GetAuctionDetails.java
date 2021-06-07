@@ -90,8 +90,12 @@ public class GetAuctionDetails extends HttpServlet {
 				String path = "/WEB-INF/Details.html";
 				ServletContext servletContext = getServletContext();
 				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+				try {
+					ctx.setVariable("biderror", request.getParameter("biderror"));
+				} finally {
 				ctx.setVariable("auctionDetails", auctionDetails);
 				templateEngine.process(path, ctx, response.getWriter());
+				}
 	}
 
 	/**
