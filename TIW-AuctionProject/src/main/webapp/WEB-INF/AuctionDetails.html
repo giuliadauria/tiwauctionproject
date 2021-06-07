@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="ISO-8859-1">
+		<title th:text="${auctionDetails.item.name}">Insert title here</title>
+	</head>
+	<body>
+		<h1 th:text="${'auction for ' + auctionDetails.item.name}"></h1>
+		<table>
+			<tbody>
+				<tr>
+					<td th:each="image : ${auctionDetails.item.pictures}"> 
+						<img th:src="@{'/images/' + ${image.pictureUrl}}" th:width="256" th:height="192"> 
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p th:text="${auctionDetails.item.description}"> </p>
+	<h2>Bids</h2>	
+	<table border="1">
+			<thead>
+				<tr>
+					<th> User </th>
+					<th> Offer </th>
+					<th> Date </th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="bid : ${bidSet}">
+					<td th:text="${bid.username}"> </td>
+					<td th:text="${bid.offer}"> </td>
+					<td th:text="${bid.dateTime}"> </td>
+				</tr>
+			</tbody>
+		</table>	
+</body>
+</html>
