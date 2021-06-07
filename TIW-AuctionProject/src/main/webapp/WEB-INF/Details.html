@@ -17,8 +17,9 @@
 			</tbody>
 		</table>
 		<p th:text="${auctionDetails.item.description}"> </p>
-		<p>Send a bid for this auction:</p>
-		<form action="#" th:action="@{/CreateBid}" method="POST">
+		<div th:if="${auctionDetails.seller} != ${session.user.username}">
+			<p>Send a bid for this auction:</p>
+			<form action="#" th:action="@{/CreateBid}" method="POST">
 			<fieldset>
 				<p>
 					bid: <input type="number" name="bid" required />
@@ -27,9 +28,10 @@
 					<input type="hidden" name="auctionId" th:value="${auctionDetails.auctionId}" />
 				</p>
 				<input type="submit" name="Add bid">
-				<p th:text=" ${errorMsg}"> </p>
+				<p th:if="${biderror} == 'true'"> A bid can't be negative, equal to zero or lower than the highest bid </p>
 			</fieldset>
-		</form>
+			</form>
+		</div>
 		<table border="1">
 			<thead>
 				<tr>
