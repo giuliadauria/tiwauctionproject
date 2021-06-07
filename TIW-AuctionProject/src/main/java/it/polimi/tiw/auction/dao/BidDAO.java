@@ -1,6 +1,5 @@
 package it.polimi.tiw.auction.dao;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,7 +28,7 @@ public class BidDAO {
 					Bid bid = new Bid();
 					bid.setUsername(result.getString("username"));
 					bid.setDateTime(result.getTimestamp("dateTime"));
-					bid.setOffer(result.getBigDecimal("offer"));
+					bid.setOffer(result.getFloat("offer"));
 					bidSet.add(bid);
 				}
 			}
@@ -46,7 +45,7 @@ public class BidDAO {
 				if(result.next()) {
 					bid.setUsername(result.getString("username"));
 					bid.setDateTime(result.getTimestamp("dateTime"));
-					bid.setOffer(result.getBigDecimal("offer"));
+					bid.setOffer(result.getFloat("offer"));
 				}
 			}
 		}
@@ -54,7 +53,7 @@ public class BidDAO {
 	}
 	
 	
-	public void createBid(String username, int auctionId, Timestamp timestamp, BigDecimal offer) throws SQLException {
+	public void createBid(String username, int auctionId, Timestamp timestamp, float offer) throws SQLException {
 		String query = "INSERT into bid (userId, auctionId, dateTime, offer) VALUES (?, ?, ?, ?)";
 		try (PreparedStatement pstatement = connection.prepareStatement(query);) {
 			UserDAO userDao = new UserDAO(connection);
@@ -63,7 +62,7 @@ public class BidDAO {
 			pstatement.setInt(1, userId);
 			pstatement.setInt(2, auctionId);
 			pstatement.setTimestamp(3, timestamp);
-			pstatement.setBigDecimal(4, offer);
+			pstatement.setFloat(4, offer);
 			pstatement.executeUpdate();
 		}
 	}	

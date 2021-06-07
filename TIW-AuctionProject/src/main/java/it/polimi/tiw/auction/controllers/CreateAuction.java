@@ -65,14 +65,14 @@ public class CreateAuction extends HttpServlet {
 		String itemName = null;
 		String description = null;
 		Timestamp deadline = null;
-		Double initialPrice = null;
-		Double raise = null;
+		Float initialPrice = null;
+		Float raise = null;
 		try {
 			itemName = StringEscapeUtils.escapeJava(request.getParameter("itemName"));
 			description = StringEscapeUtils.escapeJava(request.getParameter("description"));
 			deadline = Timestamp.valueOf(request.getParameter("deadline"));
-			initialPrice = Double.valueOf(request.getParameter("initialPrice"));
-			raise = Double.valueOf(request.getParameter("raise"));
+			initialPrice = Float.valueOf(request.getParameter("initialPrice"));
+			raise = Float.valueOf(request.getParameter("raise"));
 			isBadRequest = (raise < 0) || (initialPrice < 0) || (description.isEmpty()) || (itemName.isEmpty())
 					|| (deadline.before(now));
 		}catch (NumberFormatException | NullPointerException e) {
@@ -87,7 +87,7 @@ public class CreateAuction extends HttpServlet {
 		User user = (User) session.getAttribute("user");
 		AuctionDAO auctionDAO = new AuctionDAO(connection);
 		try {
-			auctionDAO.createAuction(user.getUserId(), itemName, description, deadline, new BigDecimal(3), new BigDecimal(0.5));
+			auctionDAO.createAuction(user.getUserId(), itemName, description, deadline, initialPrice, raise);
 		}catch(SQLException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to create auction");
 			return;

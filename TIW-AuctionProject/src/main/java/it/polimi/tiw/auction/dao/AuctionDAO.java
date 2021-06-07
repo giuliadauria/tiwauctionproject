@@ -34,10 +34,12 @@ public class AuctionDAO {
 					auction.setAuctionId(result.getInt("id"));
 					UserDAO userDAO = new UserDAO(connection);
 					auction.setSeller(userDAO.findUsernameById(result.getInt("sellerId")));
+					BidDAO bidDAO = new BidDAO(connection);
+					auction.setBidList(bidDAO.findBidByAuctionId(result.getInt("id")));
 					ItemDAO itemDAO = new ItemDAO(connection);
 					auction.setItem(itemDAO.findItemById(result.getInt("itemId")));
-					auction.setInitialPrice(result.getBigDecimal("initialPrice"));
-					auction.setRaise(result.getBigDecimal("raise"));
+					auction.setInitialPrice(result.getFloat("initialPrice"));
+					auction.setRaise(result.getFloat("raise"));
 					Timestamp now = Timestamp.from(Instant.now());
 					auction.setRemainingTime(result.getTimestamp("deadline").getTime()-now.getTime());
 				}
@@ -58,9 +60,8 @@ public class AuctionDAO {
 					openAuction.setAuctionId(result.getInt("id"));
 					UserDAO userDAO = new UserDAO(connection);
 					openAuction.setSeller(userDAO.findUsernameById(result.getInt("sellerId")));
-					//BidDAO bidDAO = new BidDAO(connection);
-					//openAuction.setBestOffer(bidDAO.findLastBid(result.getInt("id")).getOffer());
-					openAuction.setBestOffer(new BigDecimal("100.50"));
+					BidDAO bidDAO = new BidDAO(connection);
+					openAuction.setBestOffer(bidDAO.findLastBid(result.getInt("id")).getOffer());
 					ItemDAO itemDAO = new ItemDAO(connection);
 					openAuction.setItemName((itemDAO.findItemById(result.getInt("itemId")).getName()));
 					//openAuction.setItemName(result.getString("name"));
@@ -153,7 +154,7 @@ public class AuctionDAO {
 					wonAuction.setAuctionId(result.getInt("id"));
 					ItemDAO itemDAO = new ItemDAO(connection);
 					wonAuction.setItem(itemDAO.findItemById(result.getInt("itemId")));
-					wonAuction.setFinalPrice(result.getBigDecimal("finalPrice"));
+					wonAuction.setFinalPrice(result.getFloat("finalPrice"));
 					UserDAO userDAO = new UserDAO(connection);
 					wonAuction.setSellerUsername(userDAO.findUsernameById(result.getInt("sellerId")));
 					wonAuctionList.add(wonAuction);
@@ -163,7 +164,7 @@ public class AuctionDAO {
 		return wonAuctionList;
 	}
 	
-	public void createAuction(int sellerId, String nameItem, String description, Timestamp deadline, BigDecimal initialPrice, BigDecimal raise) throws SQLException {
+	public void createAuction(int sellerId, String nameItem, String description, Timestamp deadline, float initialPrice, float raise) throws SQLException {
 		//prevedo che dopo aver creato l'item e l'asta, se si vuole si possono aggiungere delle foto
 		ItemDAO itemDAO = new ItemDAO(connection);
 		int itemId = itemDAO.createItem(nameItem, description);	
@@ -172,8 +173,8 @@ public class AuctionDAO {
 			pstatement.setInt(1, itemId);
 			pstatement.setString(2, nameItem);
 			pstatement.setTimestamp(3, deadline);
-			pstatement.setBigDecimal(4, initialPrice);
-			pstatement.setBigDecimal(5, raise);
+			pstatement.setFloat(4, initialPrice);
+			pstatement.setFloat(5, raise);
 			pstatement.setInt(6, sellerId);
 			pstatement.executeUpdate();
 			//if in some way i need to return the auctionId check on createItem method how to do it

@@ -17,5 +17,34 @@
 			</tbody>
 		</table>
 		<p th:text="${auctionDetails.item.description}"> </p>
+		<p>Send a bid for this auction:</p>
+		<form action="#" th:action="@{/CreateBid}" method="POST">
+			<fieldset>
+				<p>
+					bid: <input type="number" name="bid" required />
+				</p>
+				<p>
+					<input type="hidden" name="auctionId" th:value="${auctionDetails.auctionId}" />
+				</p>
+				<input type="submit" name="Add bid">
+				<p th:text=" ${errorMsg}"> </p>
+			</fieldset>
+		</form>
+		<table border="1">
+			<thead>
+				<tr>
+					<th> User </th>
+					<th> Offer </th>
+					<th> Date </th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="bid : ${auctionDetails.bidList}">
+					<td th:text="${bid.username}"> </td>
+					<td th:text="${bid.offer}"> </td>
+					<td th:text="${bid.dateTime}"> </td>
+				</tr>
+			</tbody>
+		</table>
 	</body>
 </html>

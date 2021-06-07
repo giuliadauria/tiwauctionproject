@@ -1,6 +1,5 @@
 package it.polimi.tiw.auction.beans;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class Bid {
@@ -8,7 +7,7 @@ public class Bid {
 	private String username;
 	private int auctionId;
 	private Timestamp dateTime;
-	private BigDecimal offer;
+	private float offer;
 	
 	public String getUsername() {
 		return username;
@@ -34,11 +33,11 @@ public class Bid {
 		this.dateTime = dateTime;
 	}
 	
-	public BigDecimal getOffer() {
+	public float getOffer() {
 		return offer;
 	}
 	
-	public void setOffer(BigDecimal offer) {
+	public void setOffer(float offer) {
 		this.offer = offer;
 	}
 

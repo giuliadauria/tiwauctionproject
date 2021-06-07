@@ -6,7 +6,7 @@ public class WonAuction {
 	
 	private int auctionId;
 	private Item item;
-	private BigDecimal finalPrice;
+	private float finalPrice;
 	private String sellerUsername;
 	
 	public int getAuctionId() {
@@ -25,11 +25,11 @@ public class WonAuction {
 		this.item = item;
 	}
 	
-	public BigDecimal getFinalPrice() {
+	public float getFinalPrice() {
 		return finalPrice;
 	}
 	
-	public void setFinalPrice(BigDecimal finalPrice) {
+	public void setFinalPrice(float finalPrice) {
 		this.finalPrice = finalPrice;
 	}
 	

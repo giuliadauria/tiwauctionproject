@@ -1,6 +1,5 @@
 package it.polimi.tiw.auction.beans;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -11,8 +10,8 @@ public class AuctionDetails {
 	private String seller;
 	private Item item;
 	private String remainingTime;
-	private BigDecimal initialPrice;
-	private BigDecimal raise;
+	private float initialPrice;
+	private float raise;
 	private List<Bid> bidList;
 	
 	public int getAuctionId() {
@@ -51,19 +50,19 @@ public class AuctionDetails {
 		this.remainingTime = (days+"d "+hours+"h "+minutes+"m "+seconds+"s");
 	}
 
-	public BigDecimal getInitialPrice() {
+	public float getInitialPrice() {
 		return initialPrice;
 	}
 	
-	public void setInitialPrice(BigDecimal initialPrice) {
+	public void setInitialPrice(float initialPrice) {
 		this.initialPrice = initialPrice;
 	}
 	
-	public BigDecimal getRaise() {
+	public float getRaise() {
 		return raise;
 	}
 	
-	public void setRaise(BigDecimal raise) {
+	public void setRaise(float raise) {
 		this.raise = raise;
 	}
 	
