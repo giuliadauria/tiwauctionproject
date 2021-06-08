@@ -36,7 +36,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
-INSERT INTO `item` VALUES (1,'telefono','telefono vintage in ottime condizioni'),(2,'vaso2','bel vaso 2'),(6,'vaso6','bel vaso 6');
+INSERT INTO `item` VALUES (1,'telefono','telefono vintage in ottime condizioni'),(2,'vaso2','bel vaso 2'),(3,'libro','libro bellissimo, dovresti leggerlo!'),(4,'temperino','temperino da collezione a forma del Pensatore'),(6,'vaso6','bel vaso 6');
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-05 10:10:04
+-- Dump completed on 2021-06-08 23:00:33

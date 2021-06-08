@@ -7,17 +7,28 @@
 </head>
 <body>
 	<h1>Buy Auction Page</h1>
+	<p>Search an auction by keyword in name or description:</p>
+			<form action="#" th:action="@{/GetAuctionByKeyword}" method="POST">
+			<fieldset>
+				<p>
+					search: <input type="text" name="keyword" th:placeholder="${keyword}" />
+				</p>
+				<input type="submit" name="search">
+			</fieldset>
+			</form>
 	<table border="1">
 		<thead>
 			<tr>
+				<th>Auction name</th>
 				<th>Seller</th>
-				<th>ItemName</th>
-				<th>BestOffer</th>
-				<th>RemainingTime</th>
+				<th>Item name</th>
+				<th>Best offer</th>
+				<th>Remaining time</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="a : ${openAuctions}" th:if="${a.seller} != ${session.user.username}">
+				<td th:text="${a.name}"></td>
 				<td th:text="${a.seller}"></td>
 				<td th:text="${a.itemName}"></td>
 				<td th:text="${a.bestOffer}"></td>

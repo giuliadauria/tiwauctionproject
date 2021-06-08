@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 public class OpenAuction {
 
 	private int auctionId;
+	private String name;
 	private String seller;
 	private String itemName;
 	private float bestOffer;
@@ -52,5 +53,13 @@ public class OpenAuction {
 		long minutes = TimeUnit.MILLISECONDS.toMinutes(remainingTime)-days*24*60-hours*60;
 		long seconds = TimeUnit.MILLISECONDS.toSeconds(remainingTime)-days*24*60*60-hours*60*60-minutes*60;
 		this.remainingTime = (days+"d "+hours+"h "+minutes+"m "+seconds+"s");
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

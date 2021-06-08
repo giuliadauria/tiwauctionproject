@@ -1,14 +1,13 @@
 package it.polimi.tiw.auction.beans;
 
-import java.math.BigDecimal;
-
 public class ClosedAuction {
 	
 	private int auctionId;
+	private String name;
 	private String itemName;
 	private String contractorUsername;
 	private String contractorAddress;
-	private BigDecimal finalPrice;
+	private float finalPrice;
 	
 	public int getAuctionId() {
 		return auctionId;
@@ -42,11 +41,19 @@ public class ClosedAuction {
 		this.contractorAddress = contractorAddress;
 	}
 	
-	public BigDecimal getFinalPrice() {
+	public float getFinalPrice() {
 		return finalPrice;
 	}
 	
-	public void setFinalPrice(BigDecimal finalPrice) {
+	public void setFinalPrice(float finalPrice) {
 		this.finalPrice = finalPrice;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

@@ -16,32 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `auction`
+-- Table structure for table `bid`
 --
 
-DROP TABLE IF EXISTS `auction`;
+DROP TABLE IF EXISTS `bid`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `auction` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `sellerId` int NOT NULL,
-  `itemId` int NOT NULL,
-  `deadline` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-  `initialPrice` decimal(20,0) NOT NULL,
-  `raise` decimal(20,0) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `bid` (
+  `userId` int NOT NULL,
+  `auctionId` int NOT NULL,
+  `dateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `offer` float NOT NULL,
+  PRIMARY KEY (`userId`,`auctionId`,`dateTime`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `auction`
+-- Dumping data for table `bid`
 --
 
-LOCK TABLES `auction` WRITE;
-/*!40000 ALTER TABLE `auction` DISABLE KEYS */;
-INSERT INTO `auction` VALUES (1,'vaso2',1,1,'2021-12-11 23:00:00.000000',50,15),(2,'vaso1',1,2,'2021-12-21 23:00:00.000000',100,1),(3,'prova',1,6,'2021-07-10 22:00:00.000000',150,10),(4,'libro',2,3,'2021-07-10 22:00:00.000000',5,1),(5,'temperino',2,4,'2021-09-10 22:00:00.000000',9,1);
-/*!40000 ALTER TABLE `auction` ENABLE KEYS */;
+LOCK TABLES `bid` WRITE;
+/*!40000 ALTER TABLE `bid` DISABLE KEYS */;
+INSERT INTO `bid` VALUES (1,1,'2021-06-06 09:59:28',10),(1,1,'2021-06-06 10:04:46',15),(1,1,'2021-06-06 16:39:11',20),(1,4,'2021-06-05 18:34:53',8),(1,4,'2021-06-08 19:25:15',12),(1,5,'2021-06-07 13:08:54',5),(1,5,'2021-06-08 19:29:39',6),(1,5,'2021-06-08 19:31:26',7.01),(3,1,'2021-06-08 19:34:47',50),(3,4,'2021-06-05 18:35:47',10);
+/*!40000 ALTER TABLE `bid` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-08 23:00:34
+-- Dump completed on 2021-06-08 23:00:33

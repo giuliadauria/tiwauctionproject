@@ -2,11 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="ISO-8859-1">
-		<title th:text="${auctionDetails.item.name}">Insert title here</title>
+		<title th:text="${auctionDetails.name}">Insert title here</title>
 		<link rel="icon" href="https://image.flaticon.com/icons/png/512/783/783247.png">
 	</head>
 	<body>
-		<h1 th:text="${'auction for ' + auctionDetails.item.name}"></h1>
+		<h1 th:text="'auction for ' + ${auctionDetails.item.name} + ' by ' + ${auctionDetails.seller}"></h1>
+		<p th:text="'Remaining time: ' + ${auctionDetails.remainingTime}"> </p>
 		<table>
 			<tbody>
 				<tr>
@@ -17,21 +18,22 @@
 			</tbody>
 		</table>
 		<p th:text="${auctionDetails.item.description}"> </p>
+		<p th:text="'Initial price: ' + ${auctionDetails.initialPrice} + ' raise: ' + ${auctionDetails.raise}"> </p>
 		<div th:if="${auctionDetails.seller} != ${session.user.username}">
 			<p>Send a bid for this auction:</p>
 			<form action="#" th:action="@{/CreateBid}" method="POST">
 			<fieldset>
 				<p>
-					bid: <input type="number" name="bid" required />
+					bid: <input type="number" step="0.01" name="bid" required />
 				</p>
 				<p>
 					<input type="hidden" name="auctionId" th:value="${auctionDetails.auctionId}" />
 				</p>
 				<input type="submit" name="Add bid">
-				<p th:if="${biderror} == 'true'"> A bid can't be negative, equal to zero or lower than the highest bid </p>
+				<p th:if="${biderror} == 'true'"> A bid can't be lower than the highest bid plus the raise or lower than the initial price if you are first buyer </p>
 			</fieldset>
 			</form>
-		</div>
+		</div> <br>
 		<table border="1">
 			<thead>
 				<tr>

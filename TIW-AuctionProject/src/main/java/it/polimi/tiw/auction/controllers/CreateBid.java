@@ -26,6 +26,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import it.polimi.tiw.auction.utils.ConnectionHandler;
 import it.polimi.tiw.auction.beans.User;
+import it.polimi.tiw.auction.dao.AuctionDAO;
 import it.polimi.tiw.auction.dao.BidDAO;
 
 /**
@@ -70,13 +71,22 @@ public class CreateBid extends HttpServlet {
 		// Get and parse all parameters from request
 		boolean isBadRequest = false;
 		BidDAO bidDAO = new BidDAO(connection);
+		AuctionDAO auctionDAO = new AuctionDAO(connection); 
 		Float bid = null;
 		Integer auctionId = null;
 		try {
 			bid = Float.parseFloat(request.getParameter("bid"));
 			auctionId = Integer.parseInt(request.getParameter("auctionId"));
-			float lastBid = bidDAO.findLastBid(auctionId).getOffer();
-			isBadRequest = bid<=0 || bid<=lastBid;
+			float lastBid;
+			float raise;
+			try {
+				lastBid = bidDAO.findLastBid(auctionId).getOffer();
+			} catch (Exception e) {
+				lastBid = auctionDAO.findAuctionDetailsById(auctionId).getInitialPrice();
+			} finally {
+				raise = auctionDAO.findAuctionDetailsById(auctionId).getRaise();
+			}
+			isBadRequest = bid<=0 || bid<lastBid+raise;
 		} catch (NumberFormatException | NullPointerException | SQLException e) {
 			isBadRequest = true;
 			e.printStackTrace();

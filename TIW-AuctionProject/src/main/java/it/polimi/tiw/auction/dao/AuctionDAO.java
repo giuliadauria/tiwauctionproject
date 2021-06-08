@@ -32,6 +32,7 @@ public class AuctionDAO {
 				if(result.next()) {
 					auction = new AuctionDetails();
 					auction.setAuctionId(result.getInt("id"));
+					auction.setName(result.getString("name"));
 					UserDAO userDAO = new UserDAO(connection);
 					auction.setSeller(userDAO.findUsernameById(result.getInt("sellerId")));
 					BidDAO bidDAO = new BidDAO(connection);
@@ -58,6 +59,7 @@ public class AuctionDAO {
 				while(result.next()) {
 					OpenAuction openAuction = new OpenAuction();
 					openAuction.setAuctionId(result.getInt("id"));
+					openAuction.setName(result.getString("name"));
 					UserDAO userDAO = new UserDAO(connection);
 					openAuction.setSeller(userDAO.findUsernameById(result.getInt("sellerId")));
 					BidDAO bidDAO = new BidDAO(connection);
@@ -84,9 +86,11 @@ public class AuctionDAO {
 				while(result.next()) {
 					OpenAuction openAuction = new OpenAuction();
 					openAuction.setAuctionId(result.getInt("id"));
+					openAuction.setName(result.getString("name"));
 					BidDAO bidDAO = new BidDAO(connection);
 					openAuction.setBestOffer(bidDAO.findLastBid(result.getInt("id")).getOffer());
-					openAuction.setItemName(result.getString("name"));
+					ItemDAO itemDAO = new ItemDAO(connection);
+					openAuction.setItemName((itemDAO.findItemById(result.getInt("itemId")).getName()));
 					openAuction.setRemainingTime(result.getTimestamp("deadline").getTime() - now.getTime());
 					openAuctionList.add(openAuction);
 				}
@@ -110,8 +114,9 @@ public class AuctionDAO {
 					User contractor = userDAO.findUserById(result.getInt("contractorId"));
 					closedAuction.setContractorUsername(contractor.getUsername());
 					closedAuction.setContractorAddress(contractor.getAddress());
-					closedAuction.setItemName(result.getString("name"));
-					closedAuction.setFinalPrice(result.getBigDecimal("offer"));
+					ItemDAO itemDAO = new ItemDAO(connection);
+					closedAuction.setItemName((itemDAO.findItemById(result.getInt("itemId")).getName()));
+					closedAuction.setFinalPrice(result.getFloat("offer"));
 					closedAuctionList.add(closedAuction);
 				}
 			}
@@ -121,7 +126,7 @@ public class AuctionDAO {
 				
 	public List<OpenAuction> findAuctionByKeyword(String keyword) throws SQLException{
 		List<OpenAuction> foundAuctionList = new ArrayList<>();
-		String query = "SELECT * FROM auction JOIN item ON itemId = id WHERE (name LIKE '%?%') OR (description LIKE '%?%') ORDER BY deadline asc";
+		String query = "SELECT auction.* FROM auction JOIN item ON auction.itemId = item.id WHERE (item.name LIKE CONCAT( '%',?,'%')) OR (item.description LIKE CONCAT( '%',?,'%')) ORDER BY deadline asc";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setString(1, keyword);
 			pstatement.setString(2, keyword);
@@ -130,16 +135,22 @@ public class AuctionDAO {
 				while(result.next()) {
 					OpenAuction auctionFound = new OpenAuction();
 					auctionFound.setAuctionId(result.getInt("id"));
+					auctionFound.setName(result.getString("name"));
+					UserDAO userDAO = new UserDAO(connection);
+					auctionFound.setSeller(userDAO.findUsernameById(result.getInt("sellerId")));
 					ItemDAO itemDAO = new ItemDAO(connection);
 					auctionFound.setItemName(itemDAO.findItemById(result.getInt("itemId")).getName());
 					BidDAO bidDAO = new BidDAO(connection);
 					auctionFound.setBestOffer(bidDAO.findLastBid(result.getInt("id")).getOffer());
-					//Timestamp remainingTime = new Timestamp(((result.getTimestamp("deadline").getTime()) - now.getTime()));					
-					//auctionFound.setRemainingTime(remainingTime);
+					auctionFound.setRemainingTime(result.getTimestamp("deadline").getTime() - now.getTime());					
 					foundAuctionList.add(auctionFound);
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		}	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return foundAuctionList;
 	}
 	

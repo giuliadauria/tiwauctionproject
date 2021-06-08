@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 public class AuctionDetails {
 	
 	private int auctionId;
+	private String name;
 	private String seller;
 	private Item item;
 	private String remainingTime;
@@ -72,5 +73,13 @@ public class AuctionDetails {
 	
 	public void setBidList(List<Bid> bidList) {
 		this.bidList = bidList;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }
