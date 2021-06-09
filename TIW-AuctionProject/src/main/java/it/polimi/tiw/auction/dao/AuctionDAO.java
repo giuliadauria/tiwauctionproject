@@ -217,9 +217,9 @@ public class AuctionDAO {
 					pstatementdelete.executeUpdate();
 				}
 			}
-		}	
+		}
 		else {
-			throw new SQLException("You cannot close this auction yet");
+			throw new SQLException();
 		}
 	}
 

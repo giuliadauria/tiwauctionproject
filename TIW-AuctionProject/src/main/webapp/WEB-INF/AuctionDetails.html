@@ -16,6 +16,7 @@
 			</tbody>
 		</table>
 		<p th:text="${auctionDetails.item.description}"> </p>
+		<p th:text="'Initial price: ' + ${auctionDetails.initialPrice} + ' raise: ' + ${auctionDetails.raise}"> </p>
 	<h2>Bids</h2>	
 	<table border="1">
 			<thead>
@@ -39,5 +40,8 @@
 			style="color:black; border-color:black">Close
 				auction</button>
 		</form>
+		<input type="submit" name="Close Auction">
+		<p th:if="${closeerror} == 'true'"> This auction cannot be closed yet, wait for its deadline! </p>
+			
 </body>
 </html>

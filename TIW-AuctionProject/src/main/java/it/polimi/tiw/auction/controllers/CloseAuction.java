@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -61,6 +60,7 @@ public class CloseAuction extends HttpServlet {
 			return;
 		}	
 		//get and parse all parameters from request
+		boolean cantClose = false;
 		int auctionId = 0;
 		try {
 			auctionId = Integer.parseInt(request.getParameter("auctionId"));
@@ -72,9 +72,22 @@ public class CloseAuction extends HttpServlet {
 			auctionDAO.closeAuction(auctionId);
 		}catch(SQLException e) {
 			//if you cannot close an auction, a message appears
-		
+			cantClose = true;
+			//e.printStackTrace();
 		}
-		// Redirect to the Sekk page and add the closed action to the closed auction list
+		if(cantClose) {
+			String ctxpath = getServletContext().getContextPath();
+			String path = ctxpath + "/GoToAuctionDetails?auctionid=" + auctionId + "&closeerror=true";
+			response.sendRedirect(path);
+			return;
+		}
+		//Redirect to the Sell page and add the closed action to the closed auction list
+		else {
+			String ctxpath = getServletContext().getContextPath();
+			String path = ctxpath + "/GoToSell";
+			response.sendRedirect(path);
+			return;
+		}	
 	}
 	
 	

@@ -90,9 +90,13 @@ public class GoToAuctionDetails extends HttpServlet {
 		String path = "/WEB-INF/AuctionDetails.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		ctx.setVariable("auctionDetails", auctionDetails);
-		ctx.setVariable("bidSet", bidSet);
-		templateEngine.process(path, ctx, response.getWriter());
+		try {
+			ctx.setVariable("closeerror", request.getParameter("closeerror"));
+		} finally {
+			ctx.setVariable("auctionDetails", auctionDetails);
+			ctx.setVariable("bidSet", bidSet);
+			templateEngine.process(path, ctx, response.getWriter());
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
