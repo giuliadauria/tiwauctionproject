@@ -77,7 +77,9 @@ public class GoToSell extends HttpServlet {
 		}
 		try {
 			closedAuctions = auctionDAO.findClosedAuctionBySeller(sellerId);
-		}catch(SQLException e) {}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
 		//Redirect to the Sell page 
 		String path = "/WEB-INF/Sell.html";
 		ServletContext servletContext = getServletContext();

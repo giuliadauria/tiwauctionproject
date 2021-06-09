@@ -77,11 +77,12 @@ public class AuctionDAO {
 	
 	public List<OpenAuction> findOpenAuctionBySeller(int sellerId) throws SQLException{
 		List<OpenAuction> openAuctionList = new ArrayList<OpenAuction>();
-		String query = "SELECT * FROM auction WHERE sellerId = ? AND deadline > ? ORDER BY deadline asc";
+		//String query = "SELECT * FROM auction WHERE sellerId = ? AND deadline > ? ORDER BY deadline asc";
+		String query = "SELECT * FROM auction WHERE sellerId = ? ORDER BY deadline asc";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			Timestamp now = Timestamp.from(Instant.now());
 			pstatement.setInt(1, sellerId);
-			pstatement.setTimestamp(2, now);
+			//pstatement.setTimestamp(2, now);
 			try(ResultSet result = pstatement.executeQuery();){
 				while(result.next()) {
 					OpenAuction openAuction = new OpenAuction();
@@ -103,7 +104,7 @@ public class AuctionDAO {
 	
 	public List<ClosedAuction> findClosedAuctionBySeller(int sellerId) throws SQLException{
 		List<ClosedAuction> closedAuctionList = new ArrayList<>();
-		String query = "SELECT FROM (closedAuction JOIN item ON itemId = id) JOIN bid ON (contractorId, id, finalPrice) = (userId, AuctionId, offer) GROUP BY sellerId = ? ";
+		String query = "SELECT * FROM (closedAuction JOIN item ON closedAuction.itemId = item.id) JOIN bid ON (closedAuction.contractorId, closedAuction.id, closedAuction.finalPrice) = (bid.userId, bid.auctionId, bid.offer) WHERE closedAuction.sellerId = ? ";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setInt(1, sellerId);
 			try(ResultSet result = pstatement.executeQuery()){
@@ -197,21 +198,22 @@ public class AuctionDAO {
 	
 	public void closeAuction(int idAuction) throws SQLException {
 		AuctionDetails auctionToClose = findAuctionDetailsById(idAuction);
-		//not so sure this really works		
+		//not so sure this really works	
 		if(auctionToClose.getLongRemainingTime() < 0) {
 			String query = "INSERT into closedAuction (id, itemId, sellerId, initialPrice, raise, contractorId, finalPrice) VALUES (?, ?, ?, ?, ?, ?, ?) ";
 			try(PreparedStatement pstatement = connection.prepareStatement(query)){
-				pstatement.setInt(1, auctionToClose.getAuctionId());
+				pstatement.setInt(1, idAuction);
 				pstatement.setInt(2, auctionToClose.getItem().getItemId());
 				UserDAO userDAO = new UserDAO(connection);
-				int sellerId = userDAO.findIdByUsername(auctionToClose.getName());
+				int sellerId = userDAO.findIdByUsername(auctionToClose.getSeller());
 				pstatement.setInt(3, sellerId);
 				pstatement.setFloat(4, auctionToClose.getInitialPrice());
 				pstatement.setFloat(5, auctionToClose.getRaise());
 				BidDAO bidDAO = new BidDAO(connection);
 				pstatement.setInt(6, userDAO.findIdByUsername(bidDAO.findLastBid(idAuction).getUsername()));
 				pstatement.setFloat(7, bidDAO.findLastBid(idAuction).getOffer());
-				String deletingQuery  = "DELETE FROM openAuction WHERE id = ?";
+				pstatement.executeUpdate();
+				String deletingQuery  = "DELETE FROM auction WHERE id = ?";
 				try(PreparedStatement pstatementdelete = connection.prepareStatement(deletingQuery)){
 					pstatementdelete.setInt(1, idAuction);
 					pstatementdelete.executeUpdate();
