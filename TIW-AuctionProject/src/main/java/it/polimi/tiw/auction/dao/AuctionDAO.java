@@ -1,5 +1,4 @@
 package it.polimi.tiw.auction.dao;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,6 +42,7 @@ public class AuctionDAO {
 					auction.setRaise(result.getFloat("raise"));
 					Timestamp now = Timestamp.from(Instant.now());
 					auction.setRemainingTime(result.getTimestamp("deadline").getTime()-now.getTime());
+					auction.setLongRemainingTime(result.getTimestamp("deadline").getTime()-now.getTime());
 				}
 			}
 		}
@@ -198,18 +198,19 @@ public class AuctionDAO {
 	public void closeAuction(int idAuction) throws SQLException {
 		AuctionDetails auctionToClose = findAuctionDetailsById(idAuction);
 		//not so sure this really works		
-		/*if(((Long)auctionToClose.getRemainingTime().getTime()) < 0) {
+		if(auctionToClose.getLongRemainingTime() < 0) {
 			String query = "INSERT into closedAuction (id, itemId, sellerId, initialPrice, raise, contractorId, finalPrice) VALUES (?, ?, ?, ?, ?, ?, ?) ";
 			try(PreparedStatement pstatement = connection.prepareStatement(query)){
 				pstatement.setInt(1, auctionToClose.getAuctionId());
 				pstatement.setInt(2, auctionToClose.getItem().getItemId());
-				pstatement.setInt(3, auctionToClose.getSellerId());
-				pstatement.setBigDecimal(4, auctionToClose.getInitialPrice());
-				pstatement.setBigDecimal(5, auctionToClose.getRaise());
-				BidDAO bidDAO = new BidDAO(connection);
 				UserDAO userDAO = new UserDAO(connection);
+				int sellerId = userDAO.findIdByUsername(auctionToClose.getName());
+				pstatement.setInt(3, sellerId);
+				pstatement.setFloat(4, auctionToClose.getInitialPrice());
+				pstatement.setFloat(5, auctionToClose.getRaise());
+				BidDAO bidDAO = new BidDAO(connection);
 				pstatement.setInt(6, userDAO.findIdByUsername(bidDAO.findLastBid(idAuction).getUsername()));
-				pstatement.setBigDecimal(7, bidDAO.findLastBid(idAuction).getOffer());
+				pstatement.setFloat(7, bidDAO.findLastBid(idAuction).getOffer());
 				String deletingQuery  = "DELETE FROM openAuction WHERE id = ?";
 				try(PreparedStatement pstatementdelete = connection.prepareStatement(deletingQuery)){
 					pstatementdelete.setInt(1, idAuction);
@@ -218,8 +219,8 @@ public class AuctionDAO {
 			}
 		}	
 		else {
-			//Error message: you cannot close this auction yet
-		}*/
+			throw new SQLException("You cannot close this auction yet");
+		}
 	}
 
 }
