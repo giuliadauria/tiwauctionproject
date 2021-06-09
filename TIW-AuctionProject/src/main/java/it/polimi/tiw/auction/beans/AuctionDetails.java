@@ -1,6 +1,5 @@
 package it.polimi.tiw.auction.beans;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -10,6 +9,7 @@ public class AuctionDetails {
 	private String seller;
 	private Item item;
 	private String remainingTime;
+	private Long longRemainingTime;
 	private float initialPrice;
 	private float raise;
 	private List<Bid> bidList;
@@ -48,6 +48,14 @@ public class AuctionDetails {
 		long minutes = TimeUnit.MILLISECONDS.toMinutes(remainingTime)-days*24*60-hours*60;
 		long seconds = TimeUnit.MILLISECONDS.toSeconds(remainingTime)-days*24*60*60-hours*60*60-minutes*60;
 		this.remainingTime = (days+"d "+hours+"h "+minutes+"m "+seconds+"s");
+	}
+	
+	public long getLongRemainingTime() {
+		return longRemainingTime;
+	}
+	
+	public void setLongRemainingTime(long remainingTime) {
+		this.longRemainingTime = remainingTime;
 	}
 
 	public float getInitialPrice() {

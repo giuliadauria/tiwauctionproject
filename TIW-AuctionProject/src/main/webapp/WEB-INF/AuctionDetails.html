@@ -30,8 +30,14 @@
 					<td th:text="${bid.username}"> </td>
 					<td th:text="${bid.offer}"> </td>
 					<td th:text="${bid.dateTime}"> </td>
-				</tr>
+				</tr>	
 			</tbody>
-		</table>	
+		</table>		
+		<form th:action="@{/CloseAuction}" method="POST">
+			<input type="hidden" name="auctionid" th:value="${auctionDetails.auctionId}">
+			<button type="submit" name="auctionId" th:value="${auctionDetails.auctionId}" 
+			style="color:black; border-color:black">Close
+				auction</button>
+		</form>
 </body>
 </html>

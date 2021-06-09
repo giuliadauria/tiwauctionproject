@@ -46,7 +46,6 @@ public class GoToAuctionDetails extends HttpServlet {
 		this.templateEngine = new TemplateEngine();
 		this.templateEngine.setTemplateResolver(templateResolver);
 		templateResolver.setSuffix(".html");
-
 		connection = ConnectionHandler.getConnection(getServletContext());
 	}
 
@@ -97,7 +96,6 @@ public class GoToAuctionDetails extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 	
