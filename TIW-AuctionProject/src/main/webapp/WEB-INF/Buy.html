@@ -6,20 +6,18 @@
 <link rel="icon" href="https://image.flaticon.com/icons/png/512/783/783247.png">
 </head>
 <body>
-	<h1>Buy Auction Page</h1>
-	<p>Search an auction by keyword in name or description:</p>
-			<form action="#" th:action="@{/GetAuctionByKeyword}" method="POST">
-			<fieldset>
-				<p>
-					search: <input type="text" name="keyword" th:placeholder="${keyword}" />
-				</p>
-				<input type="submit" name="search">
-			</fieldset>
-			</form>
-	<table border="1">
+	<h1 align="center">Buy Auction Page</h1>
+	<h2 align="center"> Open Auctions</h2>
+	<p align="center">Search an auction by keyword in name or description:</p>
+		<form action="#" th:action="@{/GetAuctionByKeyword}" method="POST" align="center">
+			<input type="text" name="keyword" th:placeholder="${keyword}" /> 
+			<input type="submit" value="search">
+		</form>
+		<br>
+	<table border="1" align="center">
 		<thead>
 			<tr>
-				<th>Auction name</th>
+				<th>Auction ID</th>
 				<th>Seller</th>
 				<th>Item name</th>
 				<th>Best offer</th>
@@ -28,12 +26,31 @@
 		</thead>
 		<tbody>
 			<tr th:each="a : ${openAuctions}" th:if="${a.seller} != ${session.user.username}">
-				<td th:text="${a.name}"></td>
+				<td th:text="${a.auctionId}"></td>
 				<td th:text="${a.seller}"></td>
 				<td th:text="${a.itemName}"></td>
 				<td th:text="${a.bestOffer}"></td>
 				<td th:text="${a.remainingTime}"></td>
 				<td><a th:href="@{/GetAuctionDetails(auctionid=${a.auctionId})}">Details</a></td>
+			</tr>
+		</tbody>
+	</table>
+	<h2 align="center"> Won Auctions</h2>
+	<table border="1" align="center">
+		<thead>
+			<tr>
+				<th>Auction ID</th>
+				<th>Seller</th>
+				<th>Item name</th>
+				<th>Final Price</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="w : ${wonAuctions}">
+				<td th:text="${w.auctionId}"></td>
+				<td th:text="${w.sellerUsername}"></td>
+				<td th:text="${w.itemName}"></td>
+				<td th:text="${w.finalPrice}"></td>
 			</tr>
 		</tbody>
 	</table>

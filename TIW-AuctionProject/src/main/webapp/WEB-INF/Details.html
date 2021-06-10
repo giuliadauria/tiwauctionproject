@@ -6,9 +6,9 @@
 		<link rel="icon" href="https://image.flaticon.com/icons/png/512/783/783247.png">
 	</head>
 	<body>
-		<h1 th:text="'auction for ' + ${auctionDetails.item.name} + ' by ' + ${auctionDetails.seller}"></h1>
-		<p th:text="'Remaining time: ' + ${auctionDetails.remainingTime}"> </p>
-		<table>
+		<h1 th:text="'auction for ' + ${auctionDetails.item.name} + ' by ' + ${auctionDetails.seller}" align="center"></h1>
+		<p th:text="'Remaining time: ' + ${auctionDetails.remainingTime}" align="center"> </p>
+		<table align="center">
 			<tbody>
 				<tr>
 					<td th:each="image : ${auctionDetails.item.pictures}"> 
@@ -17,24 +17,18 @@
 				</tr>
 			</tbody>
 		</table>
-		<p th:text="${auctionDetails.item.description}"> </p>
-		<p th:text="'Initial price: ' + ${auctionDetails.initialPrice} + ' raise: ' + ${auctionDetails.raise}"> </p>
+		<p th:text="${auctionDetails.item.description}" align="center"> </p>
+		<p th:text="'Initial price: ' + ${auctionDetails.initialPrice} + ' raise: ' + ${auctionDetails.raise}" align="center"> </p>
 		<div th:if="${auctionDetails.seller} != ${session.user.username}">
-			<p>Send a bid for this auction:</p>
-			<form action="#" th:action="@{/CreateBid}" method="POST">
-			<fieldset>
-				<p>
-					bid: <input type="number" step="0.01" name="bid" required />
-				</p>
-				<p>
-					<input type="hidden" name="auctionId" th:value="${auctionDetails.auctionId}" />
-				</p>
-				<input type="submit" name="Add bid">
+			<p align="center">Send a bid for this auction:</p>
+			<form action="#" th:action="@{/CreateBid}" method="POST" align="center">
+				<input type="number" step="0.01" name="bid" required />
+				<input type="hidden" name="auctionId" th:value="${auctionDetails.auctionId}" />
+				<input type="submit" value="Add bid" />
 				<p th:if="${biderror} == 'true'"> A bid can't be lower than the highest bid plus the raise or lower than the initial price if you are first buyer </p>
-			</fieldset>
 			</form>
 		</div> <br>
-		<table border="1">
+		<table border="1" align="center">
 			<thead>
 				<tr>
 					<th> User </th>
@@ -50,5 +44,13 @@
 				</tr>
 			</tbody>
 		</table>
+		<div th:if="${auctionDetails.seller} == ${session.user.username}"><br>
+			<p align="center">If the deadline has come you can close this auction:</p>
+			<form action="#" th:action="@{/CloseAuction}" method="POST" align="center">
+				<input type="hidden" name="auctionId" th:value="${auctionDetails.auctionId}" />
+				<input type="submit" name="auctionId" value="Close Auction" >
+				<p th:if="${closeerror == 'true'}"> This auction cannot be closed yet, wait for its deadline! </p>
+			</form>
+		</div>
 	</body>
 </html>

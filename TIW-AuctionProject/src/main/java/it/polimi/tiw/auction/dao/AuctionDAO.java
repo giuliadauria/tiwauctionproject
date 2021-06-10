@@ -45,6 +45,8 @@ public class AuctionDAO {
 					auction.setLongRemainingTime(result.getTimestamp("deadline").getTime()-now.getTime());
 				}
 			}
+		} catch(Exception e) {
+			return null;
 		}
 		return auction;
 	}
@@ -71,6 +73,8 @@ public class AuctionDAO {
 					openAuctionList.add(openAuction);
 				}
 			}
+		} catch(Exception e) {
+			return null;
 		}
 		return openAuctionList;
 	}
@@ -95,16 +99,16 @@ public class AuctionDAO {
 					openAuction.setRemainingTime(result.getTimestamp("deadline").getTime() - now.getTime());
 					openAuctionList.add(openAuction);
 				}
-			}catch(SQLException e) {
-				e.printStackTrace();
 			}
+		} catch(Exception e) {
+			return null;
 		}
 		return openAuctionList;
 	}
 	
 	public List<ClosedAuction> findClosedAuctionBySeller(int sellerId) throws SQLException{
 		List<ClosedAuction> closedAuctionList = new ArrayList<>();
-		String query = "SELECT * FROM (closedAuction JOIN item ON closedAuction.itemId = item.id) JOIN bid ON (closedAuction.contractorId, closedAuction.id, closedAuction.finalPrice) = (bid.userId, bid.auctionId, bid.offer) WHERE closedAuction.sellerId = ? ";
+		String query = "SELECT * FROM (closedauction JOIN item ON closedauction.itemId = item.id) JOIN bid ON (closedauction.contractorId, closedauction.id, closedauction.finalPrice) = (bid.userId, bid.auctionId, bid.offer) WHERE closedauction.sellerId = ? ";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setInt(1, sellerId);
 			try(ResultSet result = pstatement.executeQuery()){
@@ -121,6 +125,8 @@ public class AuctionDAO {
 					closedAuctionList.add(closedAuction);
 				}
 			}
+		} catch(Exception e) {
+			return null;
 		}	
 		return closedAuctionList;
 	}	
@@ -146,18 +152,16 @@ public class AuctionDAO {
 					auctionFound.setRemainingTime(result.getTimestamp("deadline").getTime() - now.getTime());					
 					foundAuctionList.add(auctionFound);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch(Exception e) {
+			return null;
 		}
 		return foundAuctionList;
 	}
 	
 	public List<WonAuction> findWonAuctionByContractor(int idContractor) throws SQLException{
 		List<WonAuction> wonAuctionList = new ArrayList<>();
-		String query = "SELECT * FROM closedAuction JOIN bid ON (id, contractorId, finalPrice) = (auctionId, userId, offer) WHERE contractorId = ? ORDER BY bid.dateTime desc";
+		String query = "SELECT closedauction.*, MAX(bid.offer) AS finalPrice FROM closedauction JOIN bid ON (id, contractorId) = (auctionId, userId) WHERE contractorId = ? ORDER BY bid.dateTime desc";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setInt(1, idContractor);
 			try(ResultSet result = pstatement.executeQuery()){
@@ -165,13 +169,15 @@ public class AuctionDAO {
 					WonAuction wonAuction = new WonAuction();
 					wonAuction.setAuctionId(result.getInt("id"));
 					ItemDAO itemDAO = new ItemDAO(connection);
-					wonAuction.setItem(itemDAO.findItemById(result.getInt("itemId")));
+					wonAuction.setItemName(itemDAO.findItemById(result.getInt("itemId")).getName());
 					wonAuction.setFinalPrice(result.getFloat("finalPrice"));
 					UserDAO userDAO = new UserDAO(connection);
 					wonAuction.setSellerUsername(userDAO.findUsernameById(result.getInt("sellerId")));
 					wonAuctionList.add(wonAuction);
 				}
 			}
+		} catch(Exception e) {
+			return null;
 		}
 		return wonAuctionList;
 	}
@@ -200,7 +206,7 @@ public class AuctionDAO {
 		AuctionDetails auctionToClose = findAuctionDetailsById(idAuction);
 		//not so sure this really works	
 		if(auctionToClose.getLongRemainingTime() < 0) {
-			String query = "INSERT into closedAuction (id, itemId, sellerId, initialPrice, raise, contractorId, finalPrice) VALUES (?, ?, ?, ?, ?, ?, ?) ";
+			String query = "INSERT into closedauction (id, itemId, sellerId, initialPrice, raise, contractorId, finalPrice) VALUES (?, ?, ?, ?, ?, ?, ?) ";
 			try(PreparedStatement pstatement = connection.prepareStatement(query)){
 				pstatement.setInt(1, idAuction);
 				pstatement.setInt(2, auctionToClose.getItem().getItemId());

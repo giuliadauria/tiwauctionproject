@@ -73,11 +73,10 @@ public class CloseAuction extends HttpServlet {
 		}catch(SQLException e) {
 			//if you cannot close an auction, a message appears
 			cantClose = true;
-			e.printStackTrace();
 		}
 		if(cantClose) {
 			String ctxpath = getServletContext().getContextPath();
-			String path = ctxpath + "/GoToAuctionDetails?auctionid=" + auctionId + "&closeerror=true";
+			String path = ctxpath + "/GetAuctionDetails?auctionid=" + auctionId + "&closeerror=true";
 			response.sendRedirect(path);
 			return;
 		}

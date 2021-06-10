@@ -1,11 +1,9 @@
 package it.polimi.tiw.auction.beans;
 
-import java.math.BigDecimal;
-
 public class WonAuction {
 	
 	private int auctionId;
-	private Item item;
+	private String itemName;
 	private float finalPrice;
 	private String sellerUsername;
 	
@@ -17,12 +15,12 @@ public class WonAuction {
 		this.auctionId = auctionId;
 	}
 	
-	public Item getItem() {
-		return item;
+	public String getItemName() {
+		return itemName;
 	}
 	
-	public void setItem(Item item) {
-		this.item = item;
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
 	}
 	
 	public float getFinalPrice() {

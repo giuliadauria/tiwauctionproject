@@ -92,7 +92,6 @@ public class CreateBid extends HttpServlet {
 			e.printStackTrace();
 		}
 		if (isBadRequest) {
-			//response.sendError(HttpServletResponse.SC_BAD_REQUEST, "A bid can't be negative, equal to zero or lower than the highest bid");
 			String ctxpath = getServletContext().getContextPath();
 			String path = ctxpath + "/GetAuctionDetails?auctionid=" + auctionId + "&biderror=true";
 			response.sendRedirect(path);

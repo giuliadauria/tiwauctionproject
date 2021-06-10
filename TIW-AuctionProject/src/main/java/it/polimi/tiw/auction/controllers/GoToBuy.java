@@ -21,6 +21,8 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import it.polimi.tiw.auction.utils.ConnectionHandler;
 import it.polimi.tiw.auction.beans.OpenAuction;
+import it.polimi.tiw.auction.beans.User;
+import it.polimi.tiw.auction.beans.WonAuction;
 import it.polimi.tiw.auction.dao.AuctionDAO;
 
 /**
@@ -53,6 +55,7 @@ public class GoToBuy extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+				
 				String loginpath = getServletContext().getContextPath() + "/index.html";
 				HttpSession session = request.getSession();
 				if (session.isNew() || session.getAttribute("user") == null) {
@@ -61,11 +64,25 @@ public class GoToBuy extends HttpServlet {
 				}
 				AuctionDAO auctionDAO = new AuctionDAO(connection);
 				List<OpenAuction> openAuctions = new ArrayList<OpenAuction>();
+				String keyword = (String) session.getAttribute("keyword");
+				if (keyword == null) {
+					keyword = "";
+				}
 
 				try {
-					openAuctions = auctionDAO.findOpenAuction();
+					openAuctions = auctionDAO.findAuctionByKeyword(keyword);
 				} catch (SQLException e) {
 					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to find open auctions");
+					return;
+				}
+				
+				List<WonAuction> wonAuctions = new ArrayList<WonAuction>();
+
+				try {
+					User user = (User) session.getAttribute("user");
+					wonAuctions = auctionDAO.findWonAuctionByContractor(user.getUserId());
+				} catch (SQLException e) {
+					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to find won auctions");
 					return;
 				}
 
@@ -73,7 +90,9 @@ public class GoToBuy extends HttpServlet {
 				String path = "/WEB-INF/Buy.html";
 				ServletContext servletContext = getServletContext();
 				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+				ctx.setVariable("keyword", keyword);
 				ctx.setVariable("openAuctions", openAuctions);
+				ctx.setVariable("wonAuctions", wonAuctions);
 				templateEngine.process(path, ctx, response.getWriter());
 	}
 
