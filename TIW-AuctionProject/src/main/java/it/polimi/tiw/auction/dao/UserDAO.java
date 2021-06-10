@@ -50,10 +50,10 @@ public class UserDAO {
 					user.setUsername(result.getString("username"));
 					user.setPassword(result.getString("password"));
 					user.setAddress(result.getString("address"));
+					return user;
 				}
 			}	
 		}
-		return user;
 	}
 	
 	public String findUsernameById(int userId) throws SQLException{

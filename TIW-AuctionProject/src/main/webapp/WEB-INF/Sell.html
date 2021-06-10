@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.tyhymeleaf.org">
 <head>
-<meta charset="ISO-8859-1">
-<title>Sell</title>
+	<meta charset="ISO-8859-1">
+	<title>Sell</title>
+	<link rel="icon" href="https://image.flaticon.com/icons/png/512/783/783247.png">
 </head>
 <body>
-	<h1> Sell Auction Page</h1>
-	<h2>Open Auctions</h2>
-	<table border="1">
+	<a href="Logout">Logout</a>
+	<a href="Home">Home</a>
+	<h1 align="center"> Sell Auction Page</h1>
+	<h2 align="center">Open Auctions</h2>
+	<table border="1" align="center">
 		<thead>
 			<tr>
 				<th>AuctionId</th>
@@ -25,8 +28,8 @@
 				<td><a th:href="@{/GetAuctionDetails(auctionid=${a.auctionId})}">Details</a></td>
 		</tbody>
 	</table>
-	<h2>Closed Auctions</h2>
-	<table border="1">
+	<h2 align="center">Closed Auctions</h2>
+	<table border="1" align="center">
 		<thead>
 			<tr>
 				<th>AuctionId</th>
@@ -43,11 +46,10 @@
 				<td th:text="${b.contractorUsername}"></td>
 				<td th:text="${b.finalPrice}"></td>
 				<td th:text="${b.contractorAddress}"></td>
-				<td><a th:href="@{/GetAuctionDetails(auctionid=${b.auctionId})}">Details</a></td>
 		</tbody>
 	</table>
-	<div>
-		<p>Complete the form to create an auction</p>
+	<div align="center">
+		<p>Complete the form to create an auction:</p>
 		<form action="#" th:action="@{/CreateAuction}" method="POST">
 			<fieldset>
 				<p>
@@ -67,7 +69,7 @@
 				<p> 
 					Raise: <input type="text" name="raise" min=0 required />
 				</p>	
-				<input type="submit" name="Create Auction">
+				<input type="submit" value="Create Auction">
 			</fieldset>
 		</form>
 	</div>

@@ -108,7 +108,7 @@ public class AuctionDAO {
 	
 	public List<ClosedAuction> findClosedAuctionBySeller(int sellerId) throws SQLException{
 		List<ClosedAuction> closedAuctionList = new ArrayList<>();
-		String query = "SELECT * FROM (closedauction JOIN item ON closedauction.itemId = item.id) JOIN bid ON (closedauction.contractorId, closedauction.id, closedauction.finalPrice) = (bid.userId, bid.auctionId, bid.offer) WHERE closedauction.sellerId = ? ";
+		String query = "SELECT * FROM closedauction WHERE closedauction.sellerId = ?";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setInt(1, sellerId);
 			try(ResultSet result = pstatement.executeQuery()){
@@ -121,11 +121,13 @@ public class AuctionDAO {
 					closedAuction.setContractorAddress(contractor.getAddress());
 					ItemDAO itemDAO = new ItemDAO(connection);
 					closedAuction.setItemName((itemDAO.findItemById(result.getInt("itemId")).getName()));
-					closedAuction.setFinalPrice(result.getFloat("offer"));
+					BidDAO bidDAO = new BidDAO(connection);
+					closedAuction.setFinalPrice(bidDAO.findLastBid(result.getInt("id")).getOffer());
 					closedAuctionList.add(closedAuction);
 				}
 			}
 		} catch(Exception e) {
+			e.printStackTrace();
 			return null;
 		}	
 		return closedAuctionList;
@@ -161,7 +163,7 @@ public class AuctionDAO {
 	
 	public List<WonAuction> findWonAuctionByContractor(int idContractor) throws SQLException{
 		List<WonAuction> wonAuctionList = new ArrayList<>();
-		String query = "SELECT closedauction.*, MAX(bid.offer) AS finalPrice FROM closedauction JOIN bid ON (id, contractorId) = (auctionId, userId) WHERE contractorId = ? ORDER BY bid.dateTime desc";
+		String query = "SELECT * FROM closedauction WHERE contractorId = ?";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setInt(1, idContractor);
 			try(ResultSet result = pstatement.executeQuery()){
@@ -170,7 +172,8 @@ public class AuctionDAO {
 					wonAuction.setAuctionId(result.getInt("id"));
 					ItemDAO itemDAO = new ItemDAO(connection);
 					wonAuction.setItemName(itemDAO.findItemById(result.getInt("itemId")).getName());
-					wonAuction.setFinalPrice(result.getFloat("finalPrice"));
+					BidDAO bidDAO = new BidDAO(connection);
+					wonAuction.setFinalPrice(bidDAO.findLastBid(result.getInt("id")).getOffer());
 					UserDAO userDAO = new UserDAO(connection);
 					wonAuction.setSellerUsername(userDAO.findUsernameById(result.getInt("sellerId")));
 					wonAuctionList.add(wonAuction);
@@ -206,7 +209,7 @@ public class AuctionDAO {
 		AuctionDetails auctionToClose = findAuctionDetailsById(idAuction);
 		//not so sure this really works	
 		if(auctionToClose.getLongRemainingTime() < 0) {
-			String query = "INSERT into closedauction (id, itemId, sellerId, initialPrice, raise, contractorId, finalPrice) VALUES (?, ?, ?, ?, ?, ?, ?) ";
+			String query = "INSERT into closedauction (id, itemId, sellerId, initialPrice, raise, contractorId) VALUES (?, ?, ?, ?, ?, ?) ";
 			try(PreparedStatement pstatement = connection.prepareStatement(query)){
 				pstatement.setInt(1, idAuction);
 				pstatement.setInt(2, auctionToClose.getItem().getItemId());
@@ -217,13 +220,14 @@ public class AuctionDAO {
 				pstatement.setFloat(5, auctionToClose.getRaise());
 				BidDAO bidDAO = new BidDAO(connection);
 				pstatement.setInt(6, userDAO.findIdByUsername(bidDAO.findLastBid(idAuction).getUsername()));
-				pstatement.setFloat(7, bidDAO.findLastBid(idAuction).getOffer());
 				pstatement.executeUpdate();
 				String deletingQuery  = "DELETE FROM auction WHERE id = ?";
 				try(PreparedStatement pstatementdelete = connection.prepareStatement(deletingQuery)){
 					pstatementdelete.setInt(1, idAuction);
 					pstatementdelete.executeUpdate();
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		else {
