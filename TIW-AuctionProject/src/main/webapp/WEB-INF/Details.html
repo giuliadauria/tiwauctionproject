@@ -4,13 +4,14 @@
 		<meta charset="ISO-8859-1">
 		<title th:text="${auctionDetails.name}">Insert title here</title>
 		<link rel="icon" href="https://image.flaticon.com/icons/png/512/783/783247.png">
+		<link rel="stylesheet" type="text/css" media="all" href="../CSS/style.css" th:href="@{/css/style.css}" />
 	</head>
 	<body>
 		<a href="Logout">Logout</a>
 		<a href="Home">Home</a>
-		<h1 th:text="'auction for ' + ${auctionDetails.item.name} + ' by ' + ${auctionDetails.seller}" align="center"></h1>
+		<h1 th:text="'auction for ' + ${auctionDetails.item.name} + ' by ' + ${auctionDetails.seller}"></h1>
 		<p th:text="'Remaining time: ' + ${auctionDetails.remainingTime}" align="center"> </p>
-		<table align="center">
+		<table class="center">
 			<tbody>
 				<tr>
 					<td th:each="image : ${auctionDetails.item.pictures}"> 
@@ -30,19 +31,19 @@
 				<p th:if="${biderror} == 'true'"> A bid can't be lower than the highest bid plus the raise or lower than the initial price if you are first buyer </p>
 			</form>
 		</div> <br>
-		<table border="1" align="center">
+		<table class="list">
 			<thead>
-				<tr>
-					<th> User </th>
-					<th> Offer </th>
-					<th> Date </th>
+				<tr class="list">
+					<th class="list"> User </th>
+					<th class="list"> Offer </th>
+					<th class="list"> Date </th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="bid : ${auctionDetails.bidList}">
-					<td th:text="${bid.username}"> </td>
-					<td th:text="${bid.offer}"> </td>
-					<td th:text="${bid.dateTime}"> </td>
+				<tr class="list" th:each="bid : ${auctionDetails.bidList}">
+					<td class="list" th:text="${bid.username}"> </td>
+					<td class="list" th:text="${bid.offer}"> </td>
+					<td class="list" th:text="${bid.dateTime}"> </td>
 				</tr>
 			</tbody>
 		</table>

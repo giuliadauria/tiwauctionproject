@@ -4,55 +4,56 @@
 	<meta charset="ISO-8859-1">
 	<title>Buy</title>
 	<link rel="icon" href="https://image.flaticon.com/icons/png/512/783/783247.png">
+	<link rel="stylesheet" type="text/css" media="all" href="../CSS/style.css" th:href="@{/css/style.css}" />
 </head>
 <body>
 	<a href="Logout">Logout</a>
 	<a href="Home">Home</a>
-	<h1 align="center">Buy Auction Page</h1>
-	<h2 align="center"> Open Auctions</h2>
+	<h1>Buy Auction Page</h1>
+	<h2> Open Auctions</h2>
 	<p align="center">Search an auction by keyword in name or description:</p>
 		<form action="#" th:action="@{/GetAuctionByKeyword}" method="POST" align="center">
 			<input type="text" name="keyword" th:placeholder="${keyword}" /> 
 			<input type="submit" value="search">
 		</form>
 		<br>
-	<table border="1" align="center">
+	<table class="list">
 		<thead>
-			<tr>
-				<th>Auction ID</th>
-				<th>Seller</th>
-				<th>Item name</th>
-				<th>Best offer</th>
-				<th>Remaining time</th>
+			<tr class="list">
+				<th class="list">Auction ID</th>
+				<th class="list">Seller</th>
+				<th class="list">Item name</th>
+				<th class="list">Best offer</th>
+				<th class="list">Remaining time</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="a : ${openAuctions}" th:if="${a.seller} != ${session.user.username}">
-				<td th:text="${a.auctionId}"></td>
-				<td th:text="${a.seller}"></td>
-				<td th:text="${a.itemName}"></td>
-				<td th:text="${a.bestOffer}"></td>
-				<td th:text="${a.remainingTime}"></td>
-				<td><a th:href="@{/GetAuctionDetails(auctionid=${a.auctionId})}">Details</a></td>
+			<tr class="list" th:each="a : ${openAuctions}" th:if="${a.seller} != ${session.user.username}">
+				<td class="list" th:text="${a.auctionId}"></td>
+				<td class="list" th:text="${a.seller}"></td>
+				<td class="list" th:text="${a.itemName}"></td>
+				<td class="list" th:text="${a.bestOffer}"></td>
+				<td class="list" th:text="${a.remainingTime}"></td>
+				<td class="list"><a th:href="@{/GetAuctionDetails(auctionid=${a.auctionId})}">Details</a></td>
 			</tr>
 		</tbody>
 	</table>
-	<h2 align="center"> Won Auctions</h2>
-	<table border="1" align="center">
+	<h2> Won Auctions</h2>
+	<table class="list">
 		<thead>
-			<tr>
-				<th>Auction ID</th>
-				<th>Seller</th>
-				<th>Item name</th>
-				<th>Final Price</th>
+			<tr class="list">
+				<th class="list">Auction ID</th>
+				<th class="list">Seller</th>
+				<th class="list">Item name</th>
+				<th class="list">Final Price</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="w : ${wonAuctions}">
-				<td th:text="${w.auctionId}"></td>
-				<td th:text="${w.sellerUsername}"></td>
-				<td th:text="${w.itemName}"></td>
-				<td th:text="${w.finalPrice}"></td>
+			<tr class="list" th:each="w : ${wonAuctions}">
+				<td class="list" th:text="${w.auctionId}"></td>
+				<td class="list" th:text="${w.sellerUsername}"></td>
+				<td class="list" th:text="${w.itemName}"></td>
+				<td class="list" th:text="${w.finalPrice}"></td>
 			</tr>
 		</tbody>
 	</table>

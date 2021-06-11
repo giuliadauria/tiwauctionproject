@@ -1,0 +1,33 @@
+@charset "ISO-8859-1";
+body {
+	background: #94da83;
+}
+h1, h2 {
+	text-align: center;
+}
+table.list {
+	 margin: auto;
+  	 width: 50%;
+ 	 border: 3px solid black;
+ 	 /*padding: 10px;*/
+}
+th.list {
+	background: #a9a941;
+	text-align: center;
+	margin: auto;
+	border: 1px solid black;
+}
+tr.list, td.list {
+	text-align: center;
+	margin: auto;
+	border: 1px solid black;
+}
+tr:nth-child(even) {
+	background: #CCC;
+}
+tr:nth-child(odd) {
+	background: #FFF;
+}
+table.center {
+	margin: auto;
+}
