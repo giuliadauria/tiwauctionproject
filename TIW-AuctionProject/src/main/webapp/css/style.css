@@ -5,29 +5,50 @@ body {
 h1, h2 {
 	text-align: center;
 }
+.left {
+	text-align: left;
+}
+.right {
+	float: right;
+}
+table.home {
+	 margin: auto;
+  	 height: 75%;
+ 	 border: 10px solid black;
+ 	 padding: 10px;
+}
+table.home th {
+  	 background: #a9a941;
+ 	 text-align: center;
+	 margin: auto;
+	 border: 5px solid black;
+	 font-size: 2000%;
+}
 table.list {
 	 margin: auto;
-  	 width: 50%;
+  	 width: 30%;
  	 border: 3px solid black;
- 	 /*padding: 10px;*/
 }
-th.list {
+table.list th {
 	background: #a9a941;
 	text-align: center;
 	margin: auto;
 	border: 1px solid black;
 }
-tr.list, td.list {
+table.list tr, table.list td {
 	text-align: center;
 	margin: auto;
 	border: 1px solid black;
 }
-tr:nth-child(even) {
+table.list tr:nth-child(even) {
 	background: #CCC;
 }
-tr:nth-child(odd) {
+table.list tr:nth-child(odd) {
 	background: #FFF;
 }
 table.center {
 	margin: auto;
+}
+form.center, p.center {
+	text-align: center;
 }

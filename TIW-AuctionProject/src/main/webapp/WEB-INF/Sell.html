@@ -4,13 +4,18 @@
 	<meta charset="ISO-8859-1">
 	<title>Sell</title>
 	<link rel="icon" href="https://image.flaticon.com/icons/png/512/783/783247.png">
+	<link rel="stylesheet" type="text/css" media="all" href="css/style.css" th:href="@{/css/style.css}" />
 </head>
 <body>
-	<a href="Logout">Logout</a>
-	<a href="Home">Home</a>
-	<h1 align="center"> Sell Auction Page</h1>
-	<h2 align="center">Open Auctions</h2>
-	<table border="1" align="center">
+	<p class="left">
+			<a href="Home">Home</a>
+			<span class="right">
+				<a href="Logout">Logout</a>
+			</span>
+		</p>
+	<h1>Sell Auction Page</h1>
+	<h2>Open Auctions</h2>
+	<table class="list">
 		<thead>
 			<tr>
 				<th>AuctionId</th>
@@ -28,8 +33,8 @@
 				<td><a th:href="@{/GetAuctionDetails(auctionid=${a.auctionId})}">Details</a></td>
 		</tbody>
 	</table>
-	<h2 align="center">Closed Auctions</h2>
-	<table border="1" align="center">
+	<h2>Closed Auctions</h2>
+	<table class="list">
 		<thead>
 			<tr>
 				<th>AuctionId</th>
@@ -48,30 +53,26 @@
 				<td th:text="${b.contractorAddress}"></td>
 		</tbody>
 	</table>
-	<div align="center">
+	<form class="center" action="#" th:action="@{/CreateAuction}" method="POST">
 		<p>Complete the form to create an auction:</p>
-		<form action="#" th:action="@{/CreateAuction}" method="POST">
-			<fieldset>
-				<p>
-					Item Name: <input type="text" name="itemName" required />
-				</p>
-				<p>
-					Description: <input type="text" name="description" required />
-				</p>
-				<p>
-					Deadline: <input type="datetime" name="deadline"
-						th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd hh:mm:ss')}" 
-						placeholder="yyyy-mm-dd hh:mm:ss" required />
-				</p>
-				<p>
-					Initial Price: <input type="text" name="initialPrice" min=0 required />
-				</p>
-				<p> 
-					Raise: <input type="text" name="raise" min=0 required />
-				</p>	
-				<input type="submit" value="Create Auction">
-			</fieldset>
-		</form>
-	</div>
+		<p>
+			Item Name: <input type="text" name="itemName" required />
+		</p>
+		<p>
+			Description: <input type="text" name="description" required />
+		</p>
+		<p>
+			Deadline: <input type="datetime" name="deadline"
+				th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd hh:mm:ss')}" 
+				placeholder="yyyy-mm-dd hh:mm:ss" required />
+		</p>
+		<p>
+			Initial Price: <input type="text" name="initialPrice" min=0 required />
+		</p>
+		<p> 
+			Raise: <input type="text" name="raise" min=0 required />
+		</p>	
+		<input type="submit" value="Create Auction">
+	</form>
 </body>
 </html>

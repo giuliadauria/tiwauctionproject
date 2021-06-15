@@ -4,11 +4,17 @@
 		<meta charset="ISO-8859-1">
 		<title th:text="${auctionDetails.name}">Insert title here</title>
 		<link rel="icon" href="https://image.flaticon.com/icons/png/512/783/783247.png">
-		<link rel="stylesheet" type="text/css" media="all" href="../CSS/style.css" th:href="@{/css/style.css}" />
+		<link rel="stylesheet" type="text/css" media="all" href="css/style.css" th:href="@{/css/style.css}" />
 	</head>
 	<body>
-		<a href="Logout">Logout</a>
-		<a href="Home">Home</a>
+		<p class="left">
+			<a href="Home">Home</a>
+			<a href="GoToSell">Sell</a>
+			<a href="GoToBuy">Buy</a>
+			<span class="right">
+				<a href="Logout">Logout</a>
+			</span>
+		</p>
 		<h1 th:text="'auction for ' + ${auctionDetails.item.name} + ' by ' + ${auctionDetails.seller}"></h1>
 		<p th:text="'Remaining time: ' + ${auctionDetails.remainingTime}" align="center"> </p>
 		<table class="center">
@@ -24,7 +30,7 @@
 		<p th:text="'Initial price: ' + ${auctionDetails.initialPrice} + ' raise: ' + ${auctionDetails.raise}" align="center"> </p>
 		<div th:if="${auctionDetails.seller} != ${session.user.username}">
 			<p align="center">Send a bid for this auction:</p>
-			<form action="#" th:action="@{/CreateBid}" method="POST" align="center">
+			<form class="center" action="#" th:action="@{/CreateBid}" method="POST">
 				<input type="number" step="0.01" name="bid" required />
 				<input type="hidden" name="auctionId" th:value="${auctionDetails.auctionId}" />
 				<input type="submit" value="Add bid" />
@@ -33,23 +39,23 @@
 		</div> <br>
 		<table class="list">
 			<thead>
-				<tr class="list">
-					<th class="list"> User </th>
-					<th class="list"> Offer </th>
-					<th class="list"> Date </th>
+				<tr>
+					<th> User </th>
+					<th> Offer </th>
+					<th> Date </th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr class="list" th:each="bid : ${auctionDetails.bidList}">
-					<td class="list" th:text="${bid.username}"> </td>
-					<td class="list" th:text="${bid.offer}"> </td>
-					<td class="list" th:text="${bid.dateTime}"> </td>
+				<tr th:each="bid : ${auctionDetails.bidList}">
+					<td th:text="${bid.username}"> </td>
+					<td th:text="${bid.offer}"> </td>
+					<td th:text="${bid.dateTime}"> </td>
 				</tr>
 			</tbody>
 		</table>
 		<div th:if="${auctionDetails.seller} == ${session.user.username}"><br>
 			<p align="center">If the deadline has come you can close this auction:</p>
-			<form action="#" th:action="@{/CloseAuction}" method="POST" align="center">
+			<form class="center" action="#" th:action="@{/CloseAuction}" method="POST">
 				<input type="hidden" name="auctionId" th:value="${auctionDetails.auctionId}" />
 				<input type="submit" name="auctionId" value="Close Auction" >
 				<p th:if="${closeerror == 'true'}"> This auction cannot be closed yet, wait for its deadline! </p>

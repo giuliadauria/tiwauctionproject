@@ -1,19 +1,22 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<meta charset="ISO-8859-1">
-	<title>Home</title>
-	<link rel="icon" href="https://image.flaticon.com/icons/png/512/783/783247.png">
-</head>
-<body>
-	<a href="Logout">Logout</a>
-	<table border="1"align="center">
-		<thead>
-			<tr>
-				<th><a href="GoToSell">SELL</a></th>
-				<th><a href="GoToBuy">BUY</a></th>
-			</tr>
-		</thead>
-	</table>
-</body>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Home</title>
+		<link rel="icon" href="https://image.flaticon.com/icons/png/512/783/783247.png">
+		<link rel="stylesheet" type="text/css" media="all" href="css/style.css" th:href="@{/css/style.css}" />
+	</head>
+	<body>
+		<div class="right">
+			<a href="Logout">Logout</a>
+		</div><br><br><br><br><br><br><br><br><br>
+		<table class="home">
+			<thead>
+				<tr>
+					<th><a href="GoToSell">SELL</a></th>
+					<th><a href="GoToBuy">BUY</a></th>
+				</tr>
+			</thead>
+		</table>
+	</body>
 </html>
