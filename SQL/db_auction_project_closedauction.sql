@@ -16,28 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `item`
+-- Table structure for table `closedauction`
 --
 
-DROP TABLE IF EXISTS `item`;
+DROP TABLE IF EXISTS `closedauction`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `item` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `description` varchar(128) NOT NULL,
+CREATE TABLE `closedauction` (
+  `id` int NOT NULL,
+  `itemId` int NOT NULL,
+  `sellerId` int NOT NULL,
+  `contractorId` int NOT NULL,
+  `initialPrice` float NOT NULL,
+  `raise` float NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `item`
+-- Dumping data for table `closedauction`
 --
 
-LOCK TABLES `item` WRITE;
-/*!40000 ALTER TABLE `item` DISABLE KEYS */;
-INSERT INTO `item` VALUES (1,'telefono','telefono vintage in ottime condizioni'),(2,'vaso2','bel vaso 2'),(3,'libro','libro bellissimo, dovresti leggerlo!'),(4,'temperino','temperino da collezione a forma del Pensatore'),(6,'vaso6','bel vaso 6'),(7,'item1','bell\'oggetto 1'),(10,'chiuso','prova asta chiusa'),(15,'chiuso2','prova asta chiusa 2');
-/*!40000 ALTER TABLE `item` ENABLE KEYS */;
+LOCK TABLES `closedauction` WRITE;
+/*!40000 ALTER TABLE `closedauction` DISABLE KEYS */;
+INSERT INTO `closedauction` VALUES (2,2,1,3,100,1),(10,10,2,1,100,1),(15,15,1,2,100,3);
+/*!40000 ALTER TABLE `closedauction` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
