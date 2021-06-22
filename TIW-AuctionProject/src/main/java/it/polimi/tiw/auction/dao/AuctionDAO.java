@@ -101,6 +101,7 @@ public class AuctionDAO {
 				}
 			}
 		} catch(Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 		return openAuctionList;
@@ -185,10 +186,10 @@ public class AuctionDAO {
 		return wonAuctionList;
 	}
 	
-	public void createAuction(int sellerId, String nameItem, String description, Timestamp deadline, float initialPrice, float raise) throws SQLException {
+	public void createAuction(int sellerId, String nameItem, String description, Timestamp deadline, float initialPrice, float raise, List<String> urls) throws SQLException {
 		//prevedo che dopo aver creato l'item e l'asta, se si vuole si possono aggiungere delle foto
 		ItemDAO itemDAO = new ItemDAO(connection);
-		int itemId = itemDAO.createItem(nameItem, description);	
+		int itemId = itemDAO.createItem(nameItem, description, urls);	
 		String query = "INSERT into auction (itemId, name, deadline, initialPrice, raise, sellerId) VALUES (?, ?, ?, ?, ?, ?)";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setInt(1, itemId);

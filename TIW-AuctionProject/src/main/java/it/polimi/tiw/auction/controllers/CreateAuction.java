@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
@@ -86,8 +88,9 @@ public class CreateAuction extends HttpServlet {
 		//Create auction in DB
 		User user = (User) session.getAttribute("user");
 		AuctionDAO auctionDAO = new AuctionDAO(connection);
+		List<String> imagesUrls = new ArrayList<>(0);
 		try {
-			auctionDAO.createAuction(user.getUserId(), itemName, description, deadline, initialPrice, raise);
+			auctionDAO.createAuction(user.getUserId(), itemName, description, deadline, initialPrice, raise, imagesUrls);
 		}catch(SQLException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to create auction");
 			return;
@@ -100,6 +103,7 @@ public class CreateAuction extends HttpServlet {
 		String ctxpath = getServletContext().getContextPath();
 		String path = ctxpath + "/GoToSell";
 		response.sendRedirect(path);	
+		return;
 	}
 
 }
