@@ -66,9 +66,6 @@ public class GoToSell extends HttpServlet {
 		User user = new User();
 		user = (User) session.getAttribute("user");
 		int sellerId = user.getUserId();
-		
-		System.out.println(sellerId);
-		
 		AuctionDAO auctionDAO = new AuctionDAO(connection);
 		List<OpenAuction> openAuctions = new ArrayList<OpenAuction>();
 		List<ClosedAuction> closedAuctions = new ArrayList<ClosedAuction>();

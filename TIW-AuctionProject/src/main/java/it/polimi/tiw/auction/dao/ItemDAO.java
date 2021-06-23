@@ -25,13 +25,8 @@ public class ItemDAO {
 		String query = "SELECT * FROM item WHERE id = ?";
 		try(PreparedStatement pstatement = connection.prepareStatement(query);){
 				pstatement.setInt(1, itemId);
-				System.out.println("dove ti fermi");
 				try(ResultSet result = pstatement.executeQuery();){
-					System.out.println("qui");
-					System.out.println(result.getFetchSize());
-					
 					if(result.next()) {
-						System.out.println("che palle");
 						item = new Item();
 						item.setItemId(itemId);
 						item.setName(result.getString("name"));

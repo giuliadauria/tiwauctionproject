@@ -21,6 +21,10 @@
     <param-name>dbDriver</param-name>
     <param-value>com.mysql.cj.jdbc.Driver</param-value>
   </context-param>
+  <context-param>
+    <param-name>outputpath</param-name>
+    <param-value>/home/giulia/eclipse-workspace/tiw/tiwauctionproject/TIW-AuctionProject/src/main/webapp/images/</param-value>
+  </context-param>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>

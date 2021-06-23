@@ -1,6 +1,9 @@
 package it.polimi.tiw.auction.controllers;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -26,9 +29,11 @@ import it.polimi.tiw.auction.utils.ConnectionHandler;
  */
 @WebServlet("/GetAuctionDetails")
 public class GetAuctionDetails extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
 	private TemplateEngine templateEngine;
+	String folderPath = "";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -46,6 +51,7 @@ public class GetAuctionDetails extends HttpServlet {
 		templateResolver.setSuffix(".html");
 
 		connection = ConnectionHandler.getConnection(getServletContext());
+		folderPath = getServletContext().getInitParameter("outputpath");
 	}
 
 	/**
@@ -53,47 +59,61 @@ public class GetAuctionDetails extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// If the user is not logged in (not present in session) redirect to the login
-				String loginpath = getServletContext().getContextPath() + "/index.html";
-				HttpSession session = request.getSession();
-				if (session.isNew() || session.getAttribute("user") == null) {
-					response.sendRedirect(loginpath);
-					return;
-				}
+		String loginpath = getServletContext().getContextPath() + "/index.html";
+		HttpSession session = request.getSession();
+		if (session.isNew() || session.getAttribute("user") == null) {
+			response.sendRedirect(loginpath);
+			return;
+		}
+		// get and check params
+		Integer auctionId = null;
+		try {
+			auctionId = Integer.parseInt(request.getParameter("auctionid"));
+		} catch (NumberFormatException | NullPointerException e) {
+			// only for debugging e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect param values");
+			return;
+		}
+		// If a mission with that ID exists for that USER,
+		// obtain the expense report for it
+		AuctionDAO auctionDAO = new AuctionDAO(connection);
+		AuctionDetails auctionDetails = null;
+		try {
+			auctionDetails = auctionDAO.findAuctionDetailsById(auctionId);
+			if (auctionDetails == null) {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found");
+				return;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			//response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover auction details");
+			return;
+		}
+		if(auctionDetails.getItem().getPictures().size() > 0) {
+			
+			//String fileName = URLDecoder.decode(auctionDetails.getItem().getPictures().get(0).getPictureUrl(), "UTF-8");
+			System.out.println(auctionDetails.getItem().getPictures().get(0).getPictureUrl());
+						
 
-				// get and check params
-				Integer auctionId = null;
-				try {
-					auctionId = Integer.parseInt(request.getParameter("auctionid"));
-				} catch (NumberFormatException | NullPointerException e) {
-					// only for debugging e.printStackTrace();
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect param values");
-					return;
-				}
-
-				// If a mission with that ID exists for that USER,
-				// obtain the expense report for it
-				AuctionDAO auctionDAO = new AuctionDAO(connection);
-				AuctionDetails auctionDetails = null;
-				try {
-					auctionDetails = auctionDAO.findAuctionDetailsById(auctionId);
-					if (auctionDetails == null) {
-						response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found");
-						return;
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-					//response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover mission");
-					return;
-				}
-
-				// Redirect to the Home page and add missions to the parameters
-				String path = "/WEB-INF/Details.html";
-				ServletContext servletContext = getServletContext();
-				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-				ctx.setVariable("closeerror", request.getParameter("closeerror"));
-				ctx.setVariable("biderror", request.getParameter("biderror"));
-				ctx.setVariable("auctionDetails", auctionDetails);
-				templateEngine.process(path, ctx, response.getWriter());
+			
+			File file = new File(folderPath, auctionDetails.getItem().getPictures().get(0).getPictureUrl());
+			
+			if (!file.exists() || file.isDirectory()) {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, "File not present");
+				return;
+			}
+			
+		}
+		
+				
+		
+		String path = "/WEB-INF/Details.html";
+		ServletContext servletContext = getServletContext();
+		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		ctx.setVariable("closeerror", request.getParameter("closeerror"));
+		ctx.setVariable("biderror", request.getParameter("biderror"));
+		ctx.setVariable("auctionDetails", auctionDetails);
+		templateEngine.process(path, ctx, response.getWriter());
 	}
 
 	/**

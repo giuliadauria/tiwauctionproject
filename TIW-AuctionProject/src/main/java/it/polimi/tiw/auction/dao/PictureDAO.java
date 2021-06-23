@@ -42,7 +42,7 @@ public class PictureDAO {
 	}
 	
 	public void createPicture(String url, int itemId) throws SQLException {
-		String query = "INSERT into picture (itemId, url) VALUES (?, ?)";
+		String query = "INSERT into image (itemId, url) VALUES (?, ?)";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setInt(1, itemId);
 			pstatement.setString(2, url);
