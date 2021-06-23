@@ -90,23 +90,14 @@ public class GetAuctionDetails extends HttpServlet {
 			return;
 		}
 		if(auctionDetails.getItem().getPictures().size() > 0) {
-			
 			//String fileName = URLDecoder.decode(auctionDetails.getItem().getPictures().get(0).getPictureUrl(), "UTF-8");
 			System.out.println(auctionDetails.getItem().getPictures().get(0).getPictureUrl());
-						
-
-			
 			File file = new File(folderPath, auctionDetails.getItem().getPictures().get(0).getPictureUrl());
-			
 			if (!file.exists() || file.isDirectory()) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "File not present");
 				return;
 			}
-			
 		}
-		
-				
-		
 		String path = "/WEB-INF/Details.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());

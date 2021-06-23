@@ -75,7 +75,6 @@ public class CreateAuction extends HttpServlet {
 		}	
 		Part filePart = request.getPart("file");
 		String fileNameEncoded = null;
-		
 		if(filePart != null) {
 			// We then check the parameter is valid (in this case right format)
 		    String contentType = filePart.getContentType();
@@ -87,13 +86,13 @@ public class CreateAuction extends HttpServlet {
 				}
 			    String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
 			    
-			    String fileNameWithoutSpaces = StringUtils.deleteWhitespace(fileName);
+			    //String fileNameWithoutSpaces = StringUtils.deleteWhitespace(fileName);
 			    
 			    //String fileNameWithoutSpaces = fileName.replaceAll(" ","");
 
 			    //String fileNameWithoutSpaces = fileName.replaceAll("\\s+","");
 			    //encode nel caso il nome del file avesse spazi o cose sbagliate
-			    fileNameEncoded = URLEncoder.encode(fileNameWithoutSpaces, "utf-8");
+			    fileNameEncoded = URLEncoder.encode(fileName, "utf-8");
 				String outputpath = folderPath + fileNameEncoded;
 				try{
 					File file = new File(outputpath);
@@ -113,8 +112,6 @@ public class CreateAuction extends HttpServlet {
 				}
 		    }
 		}
-		
-		
 		//get and parse all parameters from request
 		boolean isBadRequest = false;
 		Timestamp now = Timestamp.from(Instant.now());
@@ -139,7 +136,6 @@ public class CreateAuction extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect or missing param values");
 			return;
 		}
-		
 		//Create auction in DB
 		User user = (User) session.getAttribute("user");
 		AuctionDAO auctionDAO = new AuctionDAO(connection);
