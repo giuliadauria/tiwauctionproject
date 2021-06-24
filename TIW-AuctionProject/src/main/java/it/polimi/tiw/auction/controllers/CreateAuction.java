@@ -133,7 +133,7 @@ public class CreateAuction extends HttpServlet {
 			imagesUrls.add(fileNameEncoded);
 		}
 		try {
-			auctionDAO.createAuction(user.getUserId(), itemName, description, deadline, initialPrice, raise, imagesUrls);
+			auctionDAO.createAuction(user.getUserId(), reverseEscape(itemName), reverseEscape(description), deadline, initialPrice, raise, imagesUrls);
 		}catch(SQLException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to create auction");
 			return;
@@ -149,6 +149,23 @@ public class CreateAuction extends HttpServlet {
 		//String point = ".";
 		int counter = string.lastIndexOf(".");
 		return string.substring(counter);
+	}
+	
+	public String reverseEscape(String string) {
+		 return string.replace("\\\\", "\\")
+		          .replace("\\t", "\t")
+		          .replace("\\b", "\b")
+		          .replace("\\n", "\n")
+		          .replace("\\r", "\r")
+		          .replace("\\f", "\f")
+		          .replace("\\'", "\'")
+		          .replace("\\\"", "\"")
+		          .replace("\\u00C3\\u00A0", "a'")
+		          .replace("\\u00C3\\u00A8", "e'")
+		          .replace("\\u00C3\\u00A9", "e'")
+		          .replace("\\u00C3\\u00AC", "i'")
+		          .replace("\\u00C3\\u00B2", "o'")
+		          .replace("\\u00C3\\u00B9", "u'");
 	}
 
 }

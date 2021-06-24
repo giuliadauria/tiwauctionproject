@@ -23,7 +23,6 @@ public class PictureDAO {
 			try(ResultSet result = pstatement.executeQuery()){
 				while(result.next()) {
 					Picture picture = new Picture();
-					picture.setImageId(result.getInt("id"));
 					picture.setItemId(result.getInt("itemId"));
 					picture.setPictureUrl(result.getString("url"));
 					picturesList.add(picture);
