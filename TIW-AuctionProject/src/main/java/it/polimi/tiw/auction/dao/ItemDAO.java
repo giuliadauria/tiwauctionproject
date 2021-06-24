@@ -67,6 +67,7 @@ public class ItemDAO {
 					pictureDAO.createPicture(urls.get(i), id);
 				}
 			}
+			
 			return id;
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -74,5 +75,24 @@ public class ItemDAO {
 		}
 	}
 	
+/*	private void renamePicturesWithItemId(int itemId) {
+		ItemDAO itemDAO = new ItemDAO(connection);
+		String oldUrl = null;
+		try {
+			oldUrl = itemDAO.findItemById(itemId).getPictures().get(0).getPictureUrl();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		String query = "UPDATE image SET url = ? WHERE itemId = ?";
+		String newUrl = oldUrl + itemId;
+		try(PreparedStatement pstatement = connection.prepareStatement(query)){
+			pstatement.setString(1, newUrl);
+			pstatement.setInt(2, itemId);
+			pstatement.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	*/
 	
 }

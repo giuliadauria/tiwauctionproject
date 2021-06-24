@@ -74,8 +74,6 @@ public class GetAuctionDetails extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect param values");
 			return;
 		}
-		// If a mission with that ID exists for that USER,
-		// obtain the expense report for it
 		AuctionDAO auctionDAO = new AuctionDAO(connection);
 		AuctionDetails auctionDetails = null;
 		try {
@@ -91,7 +89,6 @@ public class GetAuctionDetails extends HttpServlet {
 		}
 		if(auctionDetails.getItem().getPictures().size() > 0) {
 			//String fileName = URLDecoder.decode(auctionDetails.getItem().getPictures().get(0).getPictureUrl(), "UTF-8");
-			System.out.println(auctionDetails.getItem().getPictures().get(0).getPictureUrl());
 			File file = new File(folderPath, auctionDetails.getItem().getPictures().get(0).getPictureUrl());
 			if (!file.exists() || file.isDirectory()) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "File not present");
@@ -111,7 +108,6 @@ public class GetAuctionDetails extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 	

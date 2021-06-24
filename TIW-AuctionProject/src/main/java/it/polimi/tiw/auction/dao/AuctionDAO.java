@@ -117,9 +117,15 @@ public class AuctionDAO {
 					ClosedAuction closedAuction = new ClosedAuction();
 					closedAuction.setAuctionId(result.getInt("id"));
 					UserDAO userDAO = new UserDAO(connection);
-					User contractor = userDAO.findUserById(result.getInt("contractorId"));
-					closedAuction.setContractorUsername(contractor.getUsername());
-					closedAuction.setContractorAddress(contractor.getAddress());
+					if(result.getInt("contractorId") > 0) {
+						User contractor = userDAO.findUserById(result.getInt("contractorId"));
+						closedAuction.setContractorUsername(contractor.getUsername());
+						closedAuction.setContractorAddress(contractor.getAddress());
+					}
+					else {
+						closedAuction.setContractorUsername("Not sold");
+						closedAuction.setContractorAddress("null");
+					}
 					ItemDAO itemDAO = new ItemDAO(connection);
 					closedAuction.setItemName((itemDAO.findItemById(result.getInt("itemId")).getName()));
 					BidDAO bidDAO = new BidDAO(connection);
@@ -220,7 +226,14 @@ public class AuctionDAO {
 				pstatement.setFloat(4, auctionToClose.getInitialPrice());
 				pstatement.setFloat(5, auctionToClose.getRaise());
 				BidDAO bidDAO = new BidDAO(connection);
-				pstatement.setInt(6, userDAO.findIdByUsername(bidDAO.findLastBid(idAuction).getUsername()));
+				
+				if(bidDAO.findLastBid(idAuction) != null) {
+					pstatement.setInt(6, userDAO.findIdByUsername(bidDAO.findLastBid(idAuction).getUsername()));
+				}
+				else {
+					//if an auction is closed but has not been sold to anyone
+					pstatement.setInt(6, 0);
+				}
 				pstatement.executeUpdate();
 				String deletingQuery  = "DELETE FROM auction WHERE id = ?";
 				try(PreparedStatement pstatementdelete = connection.prepareStatement(deletingQuery)){

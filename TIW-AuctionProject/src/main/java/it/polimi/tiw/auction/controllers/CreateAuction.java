@@ -3,19 +3,15 @@ package it.polimi.tiw.auction.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -27,7 +23,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
 
 import it.polimi.tiw.auction.beans.User;
 import it.polimi.tiw.auction.dao.AuctionDAO;
@@ -72,47 +67,8 @@ public class CreateAuction extends HttpServlet {
 			String loginpath = getServletContext().getContextPath() + "/index.html";					
 			response.sendRedirect(loginpath);
 			return;
-		}	
-		Part filePart = request.getPart("file");
-		String fileNameEncoded = null;
-		if(filePart != null) {
-			// We then check the parameter is valid (in this case right format)
-		    String contentType = filePart.getContentType();
-		    if(!contentType.equals("application/octet-stream")) {
-			    if (!contentType.startsWith("image")) {
-			    	System.out.println(contentType);
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "File format not permitted");
-					return;
-				}
-			    String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-			    
-			    //String fileNameWithoutSpaces = StringUtils.deleteWhitespace(fileName);
-			    
-			    //String fileNameWithoutSpaces = fileName.replaceAll(" ","");
-
-			    //String fileNameWithoutSpaces = fileName.replaceAll("\\s+","");
-			    //encode nel caso il nome del file avesse spazi o cose sbagliate
-			    fileNameEncoded = URLEncoder.encode(fileName, "utf-8");
-				String outputpath = folderPath + fileNameEncoded;
-				try{
-					File file = new File(outputpath);
-			
-					try (InputStream fileContent = filePart.getInputStream()) {
-						Files.copy(fileContent, file.toPath());	
-					}catch(FileAlreadyExistsException e) {
-					}catch (Exception e) {
-						e.printStackTrace();
-						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error while saving file");
-						return;
-					}
-					
-				}catch(Exception e) {
-					e.printStackTrace();
-					return;
-				}
-		    }
 		}
-		//get and parse all parameters from request
+		User user = (User) session.getAttribute("user");
 		boolean isBadRequest = false;
 		Timestamp now = Timestamp.from(Instant.now());
 		String itemName = null;
@@ -136,8 +92,41 @@ public class CreateAuction extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect or missing param values");
 			return;
 		}
+		Part filePart = request.getPart("file");
+		String fileNameEncoded = null;
+		if(filePart != null) {
+			// We then check the parameter is valid (in this case right format)
+		    String contentType = filePart.getContentType();
+		    if(!contentType.equals("application/octet-stream")) {
+			    if (!contentType.startsWith("image")) {
+			    	System.out.println(contentType);
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "File format not permitted");
+					return;
+				}
+			    String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+			    //fileNameEncoded = URLEncoder.encode(fileName, "utf-8");
+			    fileNameEncoded = fileName.replaceAll(" ", "");
+			    String extension = findExtension(fileNameEncoded);
+			    String fileNameWithoutExtension = fileNameEncoded.replaceAll(extension, "");			    
+			    fileNameWithoutExtension = fileNameWithoutExtension + user.getUserId() + itemName.replaceAll(" ",""); 
+			    fileNameEncoded = fileNameWithoutExtension + extension;
+				String outputpath = folderPath + fileNameEncoded;
+				try{
+					File file = new File(outputpath);
+					try (InputStream fileContent = filePart.getInputStream()) {
+						Files.copy(fileContent, file.toPath());	
+					}catch (Exception e) {
+						e.printStackTrace();
+						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error while saving file");
+						return;
+					}
+				}catch(Exception e) {
+					e.printStackTrace();
+					return;
+				}
+		    }
+		}		
 		//Create auction in DB
-		User user = (User) session.getAttribute("user");
 		AuctionDAO auctionDAO = new AuctionDAO(connection);
 		List<String> imagesUrls = new ArrayList<>(0);
 		if(fileNameEncoded != null) {
@@ -154,6 +143,12 @@ public class CreateAuction extends HttpServlet {
 		String path = ctxpath + "/GoToSell";
 		response.sendRedirect(path);	
 		return;
+	}
+	
+	private String findExtension(String string) {
+		//String point = ".";
+		int counter = string.lastIndexOf(".");
+		return string.substring(counter);
 	}
 
 }
