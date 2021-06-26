@@ -84,9 +84,9 @@ public class CreateAuction extends HttpServlet {
 			raise = Float.valueOf(request.getParameter("raise"));
 			isBadRequest = (raise < 0) || (initialPrice < 0) || (description.isEmpty()) || (itemName.isEmpty())
 					|| (deadline.before(now));
-		}catch (NumberFormatException | NullPointerException e) {
+		}catch (NullPointerException | IllegalArgumentException e) {
 			isBadRequest = true;
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		if(isBadRequest) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect or missing param values");
@@ -99,12 +99,10 @@ public class CreateAuction extends HttpServlet {
 		    String contentType = filePart.getContentType();
 		    if(!contentType.equals("application/octet-stream")) {
 			    if (!contentType.startsWith("image")) {
-			    	System.out.println(contentType);
 					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "File format not permitted");
 					return;
 				}
 			    String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-			    //fileNameEncoded = URLEncoder.encode(fileName, "utf-8");
 			    fileNameEncoded = fileName.replaceAll(" ", "");
 			    String extension = findExtension(fileNameEncoded);
 			    String fileNameWithoutExtension = fileNameEncoded.replaceAll(extension, "");			    
@@ -146,7 +144,6 @@ public class CreateAuction extends HttpServlet {
 	}
 	
 	private String findExtension(String string) {
-		//String point = ".";
 		int counter = string.lastIndexOf(".");
 		return string.substring(counter);
 	}

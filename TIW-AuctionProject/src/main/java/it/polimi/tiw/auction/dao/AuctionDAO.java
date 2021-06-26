@@ -124,7 +124,7 @@ public class AuctionDAO {
 					}
 					else {
 						closedAuction.setContractorUsername("Not sold");
-						closedAuction.setContractorAddress("null");
+						closedAuction.setContractorAddress("Address not available");
 					}
 					ItemDAO itemDAO = new ItemDAO(connection);
 					closedAuction.setItemName((itemDAO.findItemById(result.getInt("itemId")).getName()));
