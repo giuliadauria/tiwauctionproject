@@ -21,7 +21,7 @@
 			<tbody>
 				<tr>
 					<td th:each="image : ${auctionDetails.item.pictures}"> 
-						<img th:src="@{'/images/' + ${image.pictureUrl}}" th:width="256" th:height="192"> 
+						<img class="fixed" th:src="@{'/images/' + ${image.pictureUrl}}"> 
 					</td>
 				</tr>
 			</tbody>

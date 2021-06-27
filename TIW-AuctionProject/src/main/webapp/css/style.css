@@ -22,7 +22,7 @@ table.home th {
  	 text-align: center;
 	 margin: auto;
 	 border: 5px solid black;
-	 font-size: 200%;
+	 font-size: 1500%;
 }
 table.list {
 	 margin: auto;
@@ -51,4 +51,9 @@ table.center {
 }
 form.center, p.center {
 	text-align: center;
+}
+img.fixed {
+	box-shadow: 10px 10px 5px #000;
+	border-radius: 8px;
+	height: 192px;
 }

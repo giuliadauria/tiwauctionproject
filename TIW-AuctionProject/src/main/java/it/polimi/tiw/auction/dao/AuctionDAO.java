@@ -142,11 +142,12 @@ public class AuctionDAO {
 				
 	public List<OpenAuction> findAuctionByKeyword(String keyword) throws SQLException{
 		List<OpenAuction> foundAuctionList = new ArrayList<>();
-		String query = "SELECT auction.* FROM auction JOIN item ON auction.itemId = item.id WHERE (item.name LIKE CONCAT( '%',?,'%')) OR (item.description LIKE CONCAT( '%',?,'%')) ORDER BY deadline asc";
+		String query = "SELECT auction.* FROM auction JOIN item ON auction.itemId = item.id WHERE ((item.name LIKE CONCAT( '%',?,'%')) OR (item.description LIKE CONCAT( '%',?,'%'))) AND deadline > ? ORDER BY deadline asc";
 		try(PreparedStatement pstatement = connection.prepareStatement(query)){
 			pstatement.setString(1, keyword);
 			pstatement.setString(2, keyword);
 			Timestamp now = Timestamp.from(Instant.now());
+			pstatement.setTimestamp(3, now);
 			try(ResultSet result = pstatement.executeQuery()){
 				while(result.next()) {
 					OpenAuction auctionFound = new OpenAuction();
