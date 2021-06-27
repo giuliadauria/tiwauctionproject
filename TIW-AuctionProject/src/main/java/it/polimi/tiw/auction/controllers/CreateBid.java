@@ -77,17 +77,18 @@ public class CreateBid extends HttpServlet {
 		try {
 			bid = Float.parseFloat(request.getParameter("bid"));
 			auctionId = Integer.parseInt(request.getParameter("auctionId"));
-			float lastBid;
-			float raise;
+			float lastBid = 0;
+			float initialPrice = 0;
+			float raise = 0;
 			try {
 				lastBid = bidDAO.findLastBid(auctionId).getOffer();
-			} catch (Exception e) {
-				lastBid = auctionDAO.findAuctionDetailsById(auctionId).getInitialPrice();
-			} finally {
+				initialPrice = auctionDAO.findAuctionDetailsById(auctionId).getInitialPrice();
 				raise = auctionDAO.findAuctionDetailsById(auctionId).getRaise();
+			}catch(Exception e) {
+				//e.printStackTrace();
 			}
-			isBadRequest = bid<=0 || bid<lastBid+raise;
-		} catch (NumberFormatException | NullPointerException | SQLException e) {
+			isBadRequest = bid<=0 || bid<lastBid+raise || bid < initialPrice;
+		} catch (NumberFormatException | NullPointerException e) {
 			isBadRequest = true;
 			e.printStackTrace();
 		}
