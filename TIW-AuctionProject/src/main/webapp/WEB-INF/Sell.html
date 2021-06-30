@@ -62,9 +62,10 @@
 			Description: <input type="text" name="description" required />
 		</p>
 		<p>
-			Deadline: <input type="datetime" name="deadline"
-				th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd hh:mm:ss')}" 
-				placeholder="yyyy-mm-dd hh:mm:ss" required />
+			Deadline: <input type="datetime-local" name="deadline"
+			
+				th:attr="min=${#dates.format(#dates.createNow())}" required /> <!-- , 'yyyy-MM-dd hh:mm:ss')}" 
+				placeholder="yyyy-mm-dd hh:mm:ss"   required /> -->
 		</p>
 		<p>
 			Initial Price: <input type="text" name="initialPrice" min=0 required />

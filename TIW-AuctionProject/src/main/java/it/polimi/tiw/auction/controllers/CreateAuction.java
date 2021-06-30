@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,12 +75,14 @@ public class CreateAuction extends HttpServlet {
 		String itemName = null;
 		String description = null;
 		Timestamp deadline = null;
+		LocalDateTime localDateTime = null;
 		Float initialPrice = null;
 		Float raise = null;
 		try {
 			itemName = StringEscapeUtils.escapeJava(request.getParameter("itemName"));
 			description = StringEscapeUtils.escapeJava(request.getParameter("description"));
-			deadline = Timestamp.valueOf(request.getParameter("deadline"));
+			localDateTime = LocalDateTime.parse(request.getParameter("deadline"));
+			deadline = Timestamp.valueOf(localDateTime);
 			initialPrice = Float.valueOf(request.getParameter("initialPrice"));
 			raise = Float.valueOf(request.getParameter("raise"));
 			isBadRequest = (raise < 0) || (initialPrice < 0) || (description.isEmpty()) || (itemName.isEmpty())
@@ -123,7 +126,7 @@ public class CreateAuction extends HttpServlet {
 					return;
 				}
 		    }
-		}		
+		}
 		//Create auction in DB
 		AuctionDAO auctionDAO = new AuctionDAO(connection);
 		List<String> imagesUrls = new ArrayList<>(0);
@@ -163,6 +166,15 @@ public class CreateAuction extends HttpServlet {
 		          .replace("\\u00C3\\u00AC", "i'")
 		          .replace("\\u00C3\\u00B2", "o'")
 		          .replace("\\u00C3\\u00B9", "u'");
+	}
+	
+	private String convert(String string) {
+		String converted = string;
+		
+		converted.replaceAll("/", "-");
+		
+		
+		return converted;
 	}
 
 }
