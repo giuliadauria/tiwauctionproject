@@ -215,6 +215,7 @@ public class AuctionDAO {
 	
 	public void closeAuction(int idAuction) throws SQLException {
 		AuctionDetails auctionToClose = findAuctionDetailsById(idAuction);
+		boolean sthWentBad = false;
 		//not so sure this really works	
 		if(auctionToClose.getLongRemainingTime() < 0) {
 			String query = "INSERT into closedauction (id, itemId, sellerId, initialPrice, raise, contractorId) VALUES (?, ?, ?, ?, ?, ?) ";
@@ -236,13 +237,21 @@ public class AuctionDAO {
 					pstatement.setInt(6, 0);
 				}
 				pstatement.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+				sthWentBad = true;
+			}
+			if(!sthWentBad) {
 				String deletingQuery  = "DELETE FROM auction WHERE id = ?";
 				try(PreparedStatement pstatementdelete = connection.prepareStatement(deletingQuery)){
 					pstatementdelete.setInt(1, idAuction);
 					pstatementdelete.executeUpdate();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+				}catch(SQLException e) {
+					e.printStackTrace();
+				}	
+			}
+			else {
+				throw new SQLException("Not found auction to delete");
 			}
 		}
 		else {
